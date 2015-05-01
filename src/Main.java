@@ -16,13 +16,13 @@ public class Main {
 		String ex = "defcon_ex.txt";
 		lp = LexicalizedParser.loadModel("englishPCFG.ser.gz");
 		
-		questionParse(lp, ex, 6);
-		softParse(ex, 6);
-		hardParse(ex, 6);
+		questionParse(ex, 6);
+		softParse(ex, 3);
+		hardParse(ex, 3);
 		//		doQuestionParse(lp, inputTextFile, 6);
 	}
 		
-	public static void questionParse(LexicalizedParser lp, String str, int numParses) {
+	public static void questionParse(String str, int numParses) {
 		QParser qp = new QParser(str,lp, new Result(numParses),0);
 		TParser tp;
 		System.out.println();
@@ -68,7 +68,7 @@ public class Main {
 		System.out.println();
 		
 		QParser qp = new QParser(str,lp, new Result(numParses),2);
-		System.out.println("Hard commands detected: " + qp.hardList.size());
+		System.out.println("Direct commands detected: " + qp.hardList.size());
 		
 		for(Sentence s : qp.hardList) {
 			TParser tp = new TParser(s);

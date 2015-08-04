@@ -25,6 +25,7 @@ import edu.stanford.nlp.trees.tregex.TregexMatcher;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
 import edu.stanford.nlp.util.ScoredObject;
 
+// Takes sentences from the input and creates parse trees out of them
 public class QParser {
 
 	public ArrayList<Sentence> sList;
@@ -49,17 +50,14 @@ public class QParser {
 	public ArrayList<Sentence> allList;
 	public ArrayList<Sentence> softList;
 	public ArrayList<Sentence> hardList;
-	public Result res;
 	public Tree tr;
 	
-	
-	public QParser(String filename, LexicalizedParser lex, Result r, int i)
+	public QParser(String filename, LexicalizedParser lex, int numParses, int i)
 	{
 		sList = new ArrayList<Sentence>(100);
 		readFile(filename);
 		   
-        numOfParses = r.numParses;
-        res = r;
+        this.numOfParses = numParses;
         
         detectedList = new ArrayList<Sentence>(22);
         correctList = new ArrayList<Sentence>(20);
@@ -161,10 +159,6 @@ public class QParser {
             sentenceBefore = gottenSentence;
 		}
 		
-		res.totalQs = totalQuestions;
-		res.totalNs = totalNormals;
-		res.detectedQs = detectedQs;
-		res.detectedNs = detectedNs;
 	}	
 	
 	private void calculate() {
@@ -227,7 +221,6 @@ public class QParser {
 			}
 			
 		}
-
 		return false;
 	}
 	
@@ -421,76 +414,6 @@ public class QParser {
 		catch(IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public void parseSR()
-	{
-        String modelPath1 = "C:\\ParserData\\englishSR.ser.gz";
-        String modelPath2 = "C:\\ParserData\\englishSR.beam.ser.gz";
-        String taggerPath = "C:\\ParserData\\english-left3words-distsim.tagger";
-        MaxentTagger tagger = new MaxentTagger(taggerPath);
-        ShiftReduceParser model = ShiftReduceParser.loadModel(modelPath1);        
-        model.defaultCoreNLPFlags();
-        ShiftReduceParserQuery srpq = new ShiftReduceParserQuery(model);          
-		Sentence gottenSentence;
-		for (int i=0; i<sList.size(); i++) {
-			
-			gottenSentence = sList.get(i);
-			
-			if (gottenSentence.isQuestion == true) {
-				totalQuestions++;
-			}
-			else {
-				totalNormals++;
-			}
-			
-			System.out.println();
-			DocumentPreprocessor tokenizer = new DocumentPreprocessor(new StringReader(gottenSentence.sent));
-			List<HasWord> sentence = tokenizer.iterator().next();
-			List<TaggedWord> tagged = tagger.tagSentence(sentence);
-			srpq.parse(tagged);
-			gottenSentence.kBest = srpq.getKBestPCFGParses(5);
-			System.out.println("PAQRSE " + numOfParses);
-			
-
-			String str = "";
-			int p =1;
-			System.out.println(gottenSentence.kBest.size());
-			for (ScoredObject<Tree> tree : gottenSentence.kBest ) {
-				//System.out.println(p);
-				p++;
-				//System.out.println(tree);
-            	if(1 == 1) {
-            		//findSoftCommands(tree.object(),gottenSentence,gottenSentence);
-            	}
-            	if(2 == 2) {
-                	if(findHardCommands(tree.object(),gottenSentence,gottenSentence)) {
-                		gottenSentence.hardCommand = true;
-                	}
-            	}
-            	if(0 == 0) {
-                    str = tree.toString();
-                    gottenSentence.tags = gottenSentence.tags + tagCheck(str,gottenSentence);
-            	}
-			}
-			
-            //Check if S tag was detected more than once or twice depending on parse number.
-            if (gottenSentence.findResult()) {
-            	detectedQs++;
-            }
-            else {
-            	detectedNs++;
-            }
-            
-            organizeSent(gottenSentence);
-            
-		}
-		
-		res.totalQs = totalQuestions;
-		res.totalNs = totalNormals;
-		res.detectedQs = detectedQs;
-		res.detectedNs = detectedNs;
-		
 	}
 	
 }

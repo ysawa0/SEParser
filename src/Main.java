@@ -10,20 +10,23 @@ public class Main {
 
 	private static LexicalizedParser lp;
 	
+	// Main method, accepts 
 	public static void main(String[] args) {
 		
 		String input = "input.txt";
 		String ex = "defcon_ex.txt";
+		String allattacks = "all attacks.txt";
 		lp = LexicalizedParser.loadModel("englishPCFG.ser.gz");
 		
-		questionParse(ex, 6);
-		softParse(ex, 3);
-		hardParse(ex, 3);
+		questionParse(allattacks, 6);
+		softParse(allattacks, 3);
+		hardParse(allattacks, 3);
 		//		doQuestionParse(lp, inputTextFile, 6);
 	}
-		
-	public static void questionParse(String str, int numParses) {
-		QParser qp = new QParser(str,lp, new Result(numParses),0);
+	
+	// Analyzes the input for questions and see if any of them are malicious
+	public static void questionParse(String filename, int numParses) {
+		QParser qp = new QParser(filename,lp, numParses,0);
 		TParser tp;
 		System.out.println();
 		System.out.println("---Question parse start--- " + numParses + " parses \n");
@@ -33,16 +36,16 @@ public class Main {
 			tp.SQParse();
 			printSent2(s);
 			PairChecker pairCheck = new PairChecker(s);
-			pairCheck.blacklistCheck();
+			pairCheck.blacklistCheck2();
 		}
 	}
 
-	
-	public static void softParse(String str, int numParses) {
+	// Analyzes the input for Soft Commands and see if any of them are malicious
+	public static void softParse(String filename, int numParses) {
 		System.out.println();
 		System.out.println("---Soft Commands parse start--- " + numParses + " parses \n");
 
-		QParser qp = new QParser(str,lp, new Result(numParses),1);
+		QParser qp = new QParser(filename,lp, numParses,1);
 		System.out.println("Soft commands detected: " + qp.softList.size());
        
 		for(Sentence s : qp.softList) {
@@ -51,7 +54,7 @@ public class Main {
 			
 			printSent2(s);
 			PairChecker pairCheck = new PairChecker(s);
-			pairCheck.blacklistCheck();
+			pairCheck.blacklistCheck2();
 			
 //			for (VerbNounPair pair : s.softWords) {
 //				System.out.println("Verb: " + pair.verb);
@@ -61,13 +64,13 @@ public class Main {
 		}
 	}
 	
-
-	public static void hardParse(String str, int numParses) {
+	// Analyzes the input for Hard Commands and see if any of them are malicious
+	public static void hardParse(String filename, int numParses) {
 		System.out.println();
 		System.out.println("---Direct Commands parse start--- " + numParses + " parses \n");
 		System.out.println();
 		
-		QParser qp = new QParser(str,lp, new Result(numParses),2);
+		QParser qp = new QParser(filename,lp, numParses,2);
 		System.out.println("Direct commands detected: " + qp.hardList.size());
 		
 		for(Sentence s : qp.hardList) {
@@ -76,21 +79,19 @@ public class Main {
 			
 			printSent2(s);
 			PairChecker pairCheck = new PairChecker(s);
-			pairCheck.blacklistCheck();
+			pairCheck.blacklistCheck2();
 			
-//			System.out.println("Verb: " + s.hardVerb);
-//			System.out.println("Noun: " + s.hardNoun);
 
 		}
 
 		
 	}
-	public static void doDetailedQuestionParse(LexicalizedParser lp, String str, int numParses) {
+	public static void doDetailedQuestionParse(LexicalizedParser lp, String filename, int numParses) {
 		System.out.println();
 		System.out.println("---cleanParse method start---" + numParses + " parses");
 		System.out.println();
 		
-		QParser qp = new QParser(str,lp, new Result(numParses),0);
+		QParser qp = new QParser(filename,lp, numParses,0);
 		System.out.println("CORRECTLY DETECTED:");
 		for(Sentence s : qp.correctList) {
 			printSent(s);
@@ -109,11 +110,11 @@ public class Main {
 	}
 	
 	
-	public static void deepParse(LexicalizedParser lp, String str, int numParses, int parseType) {
-		QParser qp = new QParser(str,lp, new Result(numParses),parseType);
+	public static void deepParse(LexicalizedParser lp, String filename, int numParses, int parseType) {
+		QParser qp = new QParser(filename,lp, numParses,parseType);
 		TParser tp;
 		System.out.println();
-		System.out.println("---deepParse method start---" + " " + str);
+		System.out.println("---deepParse method start---" + " " + filename);
 		System.out.println();
 		System.out.println("CORRECTLY DETECTED:");
 		for(Sentence s : qp.correctList) {
@@ -126,31 +127,14 @@ public class Main {
 			pairCheck.blacklistCheck();
 		}
 	}
-	public static void hardParseold(String str, int numParses) {
-		System.out.println();
-		System.out.println("---hard commands parse method start---" + numParses + " parses");
-		System.out.println();
-		
-		QParser qp = new QParser(str,lp, new Result(numParses),2);
-		System.out.println("DIRECT COMMANDS: " + qp.hardList.size() + " detected " + numParses + " Parses");
-		for(Sentence s : qp.hardList) {
-			printSent2(s);
-			PairChecker pairCheck = new PairChecker(s);
-			pairCheck.blacklistCheck();
-			System.out.println("Verb: " + s.hardVerb);
-			System.out.println("Noun: " + s.hardNoun);
-			System.out.println("-----");
-		}
-
-	}
 	
-	public static void printEveryParse(String str, int numParses) {
+	public static void printEveryParse(String filename, int numParses) {
 		// print every parse for every sentence and that's it
 		System.out.println();
 		System.out.println("---allParse method start---");
 		System.out.println();
 		
-		QParser qp = new QParser(str,lp, new Result(numParses),0);
+		QParser qp = new QParser(filename,lp, numParses,0);
 		System.out.println("ALL SENTENCES:");
 		for(Sentence s : qp.allList) {
 			System.out.println(s.sent);
@@ -161,14 +145,14 @@ public class Main {
 		
 		qp.print();
 	}
-	public static void allParse(String str, int numParses) {
+	public static void allParse(String filename, int numParses) {
 		// Parse, Detect and Analyze every question and command
 		
 		System.out.println();
 		System.out.println("---Direct Commands parse start--- " + numParses + " parses");
 		System.out.println();
 
-		QParser qp = new QParser(str,lp, new Result(numParses),3);
+		QParser qp = new QParser(filename,lp, numParses,3);
 
 		System.out.println("ALL Questions and Commands: " + qp.detectedList.size() + " detected " + numParses + " Parses");
 		
@@ -187,12 +171,12 @@ public class Main {
 		}
 	}
 	
-	public static void getParse(String str, int numParses) {
+	public static void getParse(String filename, int numParses) {
 		System.out.println();
 		System.out.println("---getParse method start---");
 		System.out.println();
 		
-		QParser qp = new QParser(str,lp, new Result(numParses),0);
+		QParser qp = new QParser(filename,lp, numParses,0);
 		System.out.println("ALL SENTENCES:");
 		for(Sentence s : qp.allList) {
 			for (int i=0; i<numParses; i++) {
@@ -241,74 +225,5 @@ public class Main {
 	}
 		
 
-	
-	public static String turnToString(ArrayList<Integer> alist) {
-		
-		String str = "";
-		
-		for (Integer i : alist) {
-			
-			str = str + i.toString() + ", ";
-		}
-		return str;
-	}
-	public static void SR(String str, int numParses) {
-		System.out.println();
-		System.out.println("---SHIFT REDUCE parse method start---" + numParses + " parses");
-		System.out.println();
-		
-		QParser qp = new QParser(str,lp, new Result(numParses),-1);
-		qp.parseSR();
-		
-		System.out.println("CORRECTLY DETECTED:");
-		for(Sentence s : qp.correctList) {
-			printSent(s);
-		}
-		System.out.println();
-		System.out.println("FALSE NEGATIVES:");
-		for(Sentence s : qp.fnList) {
-			printSent(s);
-		}
-		System.out.println();
-		System.out.println("FALSE POSITIVES:");
-		for(Sentence s : qp.fpList) {
-			printSent(s);
-		}
-		qp.print();
-		
-		System.out.println("DIRECT COMMANDS: " + qp.hardList.size() + "detected " + numParses + " Parses");
-		for(Sentence s : qp.hardList) {
-			printSent2(s);
-		}
-		
-		System.out.println("SOFT COMMANDS: " + qp.softList.size() + "detected " + numParses + " Parses");
-		for(Sentence s : qp.softList) {
-			printSent2(s);
-		}
-	}
-	public static void SR2(String str, int numParses) {
-		System.out.println();
-		System.out.println("---SHIFT REDUCE parse method start---" + numParses + " parses");
-		System.out.println();
-		
-		QParser qp = new QParser(str,lp, new Result(numParses),-1);
-		qp.parseSR();
 
-		System.out.println("ALL SENTENCES:");
-		for(Sentence s : qp.allList) {
-			System.out.println(s.sent);
-			for (int i=0; i<numParses; i++) {
-				System.out.println(s.kBest.get(i).object());
-			}
-			if(s.sent.equals("And up in the top line, the address, type in FTP://update-google.com.")) {
-				System.out.println(s.sent);
-				for (int i=0; i<numParses; i++) {
-					System.out.println(s.kBest.get(i).object());
-				}
-				System.out.println();
-			}
-
-		}
-
-	}
 }

@@ -79,8 +79,6 @@ private ArrayList<Tree> nounTreeList;
 		findSQ(tree);
 		
 		if (sqList.size() > 0) {
-			//System.out.println("Found S Tag");
-			//System.out.println(sent.sent);
 			//Search for noun/verbs for each S tag found.
 			
 			for (Tree t : sqList) {

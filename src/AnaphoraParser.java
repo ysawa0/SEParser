@@ -64,7 +64,6 @@ public class AnaphoraParser {
 			}
 			//System.out.println("THAT resolves to: " + thatResolution);
 			currentSent.anaphoraResolution = thatResolution;
-
 		}
 	}
 	

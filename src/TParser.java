@@ -13,7 +13,6 @@ public class TParser {
 private Tree whtree;
 
 private ArrayList<Tree> sqList;
-private ArrayList<Tree> sbarList;
 private ArrayList<String> nounList;
 private ArrayList<String> verbList;
 private ArrayList<String> verbList2;
@@ -109,9 +108,7 @@ private ArrayList<Tree> nounTreeList;
 	private static boolean doesTreeMatchPattern(Tree tree, String pattern) {
 		TregexPattern patternMW = TregexPattern.compile(pattern);
 		TregexMatcher matcher = patternMW.matcher(tree);
-		Tree match = null;
 		if (matcher.findNextMatchingNode()) {
-			match = matcher.getMatch();
 			return true;
 		} else {
 			return false;

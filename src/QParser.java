@@ -201,7 +201,6 @@ public class QParser {
 				TregexMatcher matcher3 = patternMW.matcher(t); 
 				if (matcher3.findNextMatchingNode()) {
 					Tree match3 = matcher3.getMatch();
-					String noun = match3.yield().toString();
 					//System.out.println("Noun: " + sent.softNoun);
 					//System.out.println("Noun: " + match);
 				}

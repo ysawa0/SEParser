@@ -9,15 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.stanford.nlp.ling.HasWord;
-import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParserQuery;
-import edu.stanford.nlp.parser.shiftreduce.ShiftReduceParser;
-import edu.stanford.nlp.parser.shiftreduce.ShiftReduceParserQuery;
-import edu.stanford.nlp.process.DocumentPreprocessor;
 import edu.stanford.nlp.process.Tokenizer;
-import edu.stanford.nlp.tagger.maxent.MaxentTagger;
-import edu.stanford.nlp.trees.EnglishGrammaticalStructure;
 import edu.stanford.nlp.trees.PennTreebankLanguagePack;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreebankLanguagePack;

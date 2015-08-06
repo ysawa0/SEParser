@@ -2,12 +2,12 @@
 
 import java.util.ArrayList;
 
-import edu.stanford.nlp.ling.Label;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.tregex.TregexMatcher;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
-import edu.stanford.nlp.util.ScoredObject;
 
+// This is the TRegex Parser
+// Given a TRegex pattern if it see if the parse tree from QParser matches it 
 public class TParser {
 
 private Tree whtree;
@@ -122,16 +122,12 @@ private ArrayList<Tree> nounTreeList;
 		whList = new ArrayList<String>();
 		findWh(tree);
 		if (whList.size() == 1) {
-			//System.out.println("Found WH");
-			//System.out.println(sent.sent);
 			Tree whancestor = getAncestor(whtree);
-			//System.out.println(whancestor);
 
 			findVerbTregex(whancestor);
 			findNounTregex(whancestor);
 
 			verbNounPairFinder(whancestor);
-			//System.out.println("----------------------");
 		}
 	}
 	

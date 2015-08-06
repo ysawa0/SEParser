@@ -6,6 +6,8 @@ import java.util.List;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.util.ScoredObject;
 
+// Each sentence/line in the input text file is turned into a Sentence object which holds 
+// the parse trees, verb/noun info and if it has been detected as a certain type of sentence
 public class Sentence {
 
 	private boolean hasThat = false; // includes a "that" in the sentence

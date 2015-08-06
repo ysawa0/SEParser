@@ -1,16 +1,15 @@
 
 
-import java.util.ArrayList;
 
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
-import edu.stanford.nlp.trees.Tree;
-import edu.stanford.nlp.util.ScoredObject;
 
 public class Main {
 
 	private static LexicalizedParser lp;
 	
-	// Main method, accepts 
+	// Main method 
+	// input - the input text file. Each sentence should be on its own line and end with a period
+	// lp - the Parser Model 
 	public static void main(String[] args) {
 		
 		String input = "input.txt";
@@ -18,9 +17,10 @@ public class Main {
 		String allattacks = "all attacks.txt";
 		lp = LexicalizedParser.loadModel("englishPCFG.ser.gz");
 		
-		questionParse(allattacks, 6);
-		softParse(allattacks, 3);
-		hardParse(allattacks, 3);
+		// 
+		questionParse(input, 6);
+		softParse(input, 3);
+		hardParse(input, 3);
 		//		doQuestionParse(lp, inputTextFile, 6);
 	}
 	
@@ -199,8 +199,6 @@ public class Main {
 			}
 
 		}
-
-		
 		qp.print();
 	}	
 	
@@ -214,7 +212,7 @@ public class Main {
 	}
 	
 	public static void printSent2(Sentence s) {
-		System.out.println("Sentence: " + s.sent);
+		System.out.println("\nSentence: " + s.sent);
 		if (s.sent.equals("Click run.")) {
 			System.out.println(s.kBest.get(1).object().skipRoot());
 		}

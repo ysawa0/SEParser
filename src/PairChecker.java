@@ -41,18 +41,22 @@ public class PairChecker {
 	// Find any Anaphora Resolution and replace the "that" or "it"
 	public void doAnaphoraDetection() {
 		
-		System.out.println("Anaphorse Detection");
 		
 		for (VerbNounPair vnPair : sent.vnpairs) {
-			System.out.println("VNP verb: " + vnPair.verb);
-			System.out.println("VNP nouns: " + vnPair.nouns);
+//			System.out.println("VNP verb: " + vnPair.verb);
+//			System.out.println("VNP nouns: " + vnPair.nouns);
 			
 			for (int i=0; i < vnPair.nouns.size(); i++ ){
 				String noun = vnPair.nouns.get(i);
 				if (noun.contains("that") || noun.contains("[it]")) {
 					if (sent.getHasThat()) {
+						if(noun.contains("that")) {
+							System.out.println("Anaphora resolution detected - Replacing \"that\" with: " + sent.anaphoraResolution);
+						}
+						else if(noun.contains("[it]")) {
+							System.out.println("Anaphora resolution detected - Replacing \"it\" with: " + sent.anaphoraResolution);
+						}
 						vnPair.nouns.set(i, sent.anaphoraResolution);
-						System.out.println("Anaphora resolution detected - Replacing That or It");
 					}
 				}
 			}

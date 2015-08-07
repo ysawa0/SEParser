@@ -75,23 +75,8 @@ public class PairChecker {
 					
 					for (String noun : sentPair.nouns) {
 						
-//						if (noun.contains("that") || noun.contains("[it]")) {
-//							if (sent.getHasThat()) {
-//								noun = sent.anaphoraResolution;
-//								System.out.println("Anaphora resolution detected - Replacing That or It");
-//							}
-//						}
-						
 						for (String blacknoun : blackwordsPair.nouns) {
 							
-//							if (noun.contains("that") || noun.contains("[it]")) {
-//								if (sent.getHasThat()) {
-//									noun = sent.anaphoraResolution;
-//									System.out.println("Anaphora resolution detected - Replacing That or It");
-//								}
-//							}
-							
-//							System.out.println("blacknoun " + blacknoun + " noun " + noun);
 							if (noun.contains(blacknoun)) {
 								System.out.println("Blacklist Noun found: " + blacknoun);
 								System.out.println("------ Sentence is MALICIOUS ------\n");

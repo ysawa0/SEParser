@@ -7,7 +7,7 @@ import edu.stanford.nlp.trees.tregex.TregexMatcher;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
 
 // This is the TRegex Parser
-// Given a TRegex pattern if it see if the parse tree from QParser matches it 
+// Given a TRegex pattern it will see if the parse tree from QParser matches it 
 public class TParser {
 
 private Tree whtree;
@@ -52,14 +52,14 @@ private ArrayList<Tree> nounTreeList;
 			verbList2 = new ArrayList<String>();
 			nounTreeList = new ArrayList<Tree>();
 			verbTreeList = new ArrayList<Tree>();
-//			System.out.println(sent.sent);
-//			System.out.println(tree);
+//			OutputWriter.write(sent.sent);
+//			OutputWriter.write(tree);
 			findVerbTregex(tree);
 			
 			findNounTregex(tree);
 			
 			verbNounPairFinder(tree);
-			//System.out.println("----------------------");
+			//OutputWriter.write("----------------------");
 		
 	}
 	public void SQParse() {
@@ -87,14 +87,14 @@ private ArrayList<Tree> nounTreeList;
 				nounTreeList = new ArrayList<Tree>();
 				verbTreeList = new ArrayList<Tree>();
 				
-				//System.out.println(t);
+				//OutputWriter.write(t);
 				
 				findVerbTregex(t);
 				
 				findNounTregex(t);
 				
 				verbNounPairFinder(t);
-				//System.out.println("----------------------");
+				//OutputWriter.write("----------------------");
 			}
 
 		}
@@ -141,13 +141,13 @@ private ArrayList<Tree> nounTreeList;
 				firstVerb = verbTreeList.get(i);
 				firstVerbNum = firstVerb.nodeNumber(theTree);
 				
-				//System.out.println("VERB: " + firstVerb.yield());
+				//OutputWriter.write("VERB: " + firstVerb.yield());
 				
 				sent.newPair(firstVerb.yield().toString());
 				for (Tree t : nounTreeList) {
 					nounNum = t.nodeNumber(theTree);
 					if ( firstVerbNum < nounNum) {
-						//System.out.println("NOUN: " + t.yield());
+						//OutputWriter.write("NOUN: " + t.yield());
 						sent.addNoun(t.yield().toString());
 					}
 				}
@@ -159,17 +159,17 @@ private ArrayList<Tree> nounTreeList;
 			firstVerbNum = firstVerb.nodeNumber(theTree);
 			secondVerbNum = secondVerb.nodeNumber(theTree);
 			
-			//System.out.println("VERB: " + firstVerb.yield());
+			//OutputWriter.write("VERB: " + firstVerb.yield());
 			sent.newPair(firstVerb.yield().toString());
 			
 			for (Tree t : nounTreeList) {
 				nounNum = t.nodeNumber(theTree);
 				if ( firstVerbNum < nounNum && secondVerbNum > nounNum) {
-					//System.out.println("NOUN: " + t.yield());
+					//OutputWriter.write("NOUN: " + t.yield());
 					sent.addNoun(t.yield().toString());
 				}
 			}
-			//System.out.println();
+			//OutputWriter.write();
 			
 		}
 	}

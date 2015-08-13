@@ -9,14 +9,15 @@ import edu.stanford.nlp.util.ScoredObject;
 // Each sentence/line in the input text file is turned into a Sentence object which holds 
 // the parse trees, verb/noun info and if it has been detected as a certain type of sentence
 public class Sentence {
-
+	
 	private boolean hasThat = false; // includes a "that" in the sentence
 	public String sent;
 	public boolean isQuestion = false;
-	public boolean isSoft = false;
-
-	
+	public boolean isSoftCommand = false;
+	private boolean isDirectCommand = false;
+	private boolean isMalicious = false;
 	public List<ScoredObject<Tree>> kBest;
+	
 	private ArrayList<Tree> kBestTrees;
 	
 	public boolean detectAsQ = false;
@@ -55,11 +56,11 @@ public class Sentence {
         }
         if(s.contains("!"))
         {
-        	isSoft = true;
+        	isSoftCommand = true;
         }
         else
         {
-        	isSoft = false;
+        	isSoftCommand = false;
         }
         vnpairs = new ArrayList<VerbNounPair>();
 	}
@@ -88,8 +89,8 @@ public class Sentence {
 	public void initKeywords() {
 		vnpairs = new ArrayList<VerbNounPair>();
 	}
-	// Requires number of detections for a sentence to be detected
 	
+	// Requires number of detections for a sentence to be detected
 	public void newPair(String v) {
 		vnpairs.add(new VerbNounPair(v));
 	}
@@ -149,5 +150,37 @@ public class Sentence {
 				return false;
 			}
 		}
+	}
+	
+	public boolean isMalicious() { 
+		return isMalicious;
+	}
+	
+	public void setIsMalicious(boolean isMalicious) {
+		this.isMalicious = isMalicious;
+	}
+	
+	public boolean isQuestion() {
+		return isQuestion;
+	}
+
+	public void setQuestion(boolean isQuestion) {
+		this.isQuestion = isQuestion;
+	}
+
+	public boolean isSoftCommand() {
+		return isSoftCommand;
+	}
+
+	public void setSoftCommand(boolean isSoftCommand) {
+		this.isSoftCommand = isSoftCommand;
+	}
+
+	public boolean isDirectCommand() {
+		return isDirectCommand;
+	}
+
+	public void setDirectCommand(boolean isDirectCommand) {
+		this.isDirectCommand = isDirectCommand;
 	}
 }

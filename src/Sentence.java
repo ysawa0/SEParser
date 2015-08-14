@@ -65,6 +65,10 @@ public class Sentence {
         vnpairs = new ArrayList<VerbNounPair>();
 	}
 	
+	public List<ScoredObject<Tree>> getKBest() {
+		return kBest;
+	}
+	
 	public void setKBest(List<ScoredObject<Tree>> kBest) {
 		this.kBest = kBest;
 		// convert List<Scoredobject<Tree>> to ArrayList<Tree>

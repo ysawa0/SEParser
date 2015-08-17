@@ -77,23 +77,8 @@ public class PairChecker {
 					
 					for (String noun : sentPair.nouns) {
 						
-//						if (noun.contains("that") || noun.contains("[it]")) {
-//							if (sent.getHasThat()) {
-//								noun = sent.anaphoraResolution;
-//								OutputWriter.write("Anaphora resolution detected - Replacing That or It");
-//							}
-//						}
-						
 						for (String blacknoun : blackwordsPair.nouns) {
 							
-//							if (noun.contains("that") || noun.contains("[it]")) {
-//								if (sent.getHasThat()) {
-//									noun = sent.anaphoraResolution;
-//									OutputWriter.write("Anaphora resolution detected - Replacing That or It");
-//								}
-//							}
-							
-//							OutputWriter.write("blacknoun " + blacknoun + " noun " + noun);
 							if (noun.contains(blacknoun)) {
 								OutputWriter.write("Blacklist Noun found: " + blacknoun);
 								OutputWriter.write("------ Sentence is MALICIOUS ------\n");
@@ -107,46 +92,4 @@ public class PairChecker {
 			
 		}
 	}
-	
-	public void blacklistCheck() {
-		for (VerbNounPair vnPair : sent.vnpairs) {
-			
-			for (VerbNounPair blackwordsPair : blacklist )
-			{
-				// Find a blacklist verb
-				if (vnPair.verb.contains(blackwordsPair.verb)) {
-					OutputWriter.write("Blacklist Verb found: " + vnPair.verb);
-					
-					for (String noun : vnPair.nouns) {
-						
-						if (noun.contains("that") || noun.contains("[it]")) {
-							if (sent.getHasThat()) {
-								noun = sent.anaphoraResolution;
-								OutputWriter.write("Anaphora resolution detected - Replacing That or It");
-							}
-						}
-						
-						for (String blacknoun : blackwordsPair.nouns) {
-							
-//							if (noun.contains("that") || noun.contains("[it]")) {
-//								if (sent.getHasThat()) {
-//									noun = sent.anaphoraResolution;
-//									OutputWriter.write("Anaphora resolution detected - Replacing That or It");
-//								}
-//							}
-							
-//							OutputWriter.write("blacknoun " + blacknoun + " noun " + noun);
-							if (noun.contains(blacknoun)) {
-								OutputWriter.write("Blacklist Noun found: " + blacknoun);
-								OutputWriter.write("------ Sentence is MALICIOUS ------\n");
-							}
-						}
-						
-					}
-				}
-			}
-			
-		}
-	}
-	
 }

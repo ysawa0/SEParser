@@ -21,7 +21,7 @@ import edu.stanford.nlp.util.ScoredObject;
 // Takes sentences from the input and creates parse trees out of them
 public class QParser {
 
-	public ArrayList<Sentence> sList;
+	public ArrayList<Sentence> sentList;
 	private LexicalizedParserQuery lpq;
 	private int numOfParses;
 	public List<List<? extends HasWord>> pList;
@@ -31,7 +31,7 @@ public class QParser {
 	public int detectedNs = 0;
 	public int falsePositives = 0;
 	public int falseNegatives = 0;
-	public int parseType = 0;
+	public int typeOfParse = 0;
 	public double precision;
 	public double recall;
 
@@ -46,9 +46,10 @@ public class QParser {
 	public ArrayList<Sentence> hardList;
 	public Tree tr;
 
-	public QParser(String filename, LexicalizedParser lex, int numOfParses, int i) {
-		sList = new ArrayList<Sentence>(100);
-		readFile(filename);
+	public QParser(String filename, LexicalizedParser lex, int numOfParses, int typeOfParse, ArrayList<Sentence> sentList) {
+//		sentList = new ArrayList<Sentence>(100);
+		this.sentList = sentList;
+//		readFile(filename);
 
 		this.numOfParses = numOfParses;
 
@@ -60,11 +61,73 @@ public class QParser {
 		allList = new ArrayList<Sentence>(20);
 		softList = new ArrayList<Sentence>(20);
 		hardList = new ArrayList<Sentence>(20);
-		parseType = i;
+		this.typeOfParse = typeOfParse;
 
-		if (parseType >= 0)
-			parseSentences(lex);
+//		if (parseType >= 0)
+//			parseSentences(lex);
+		if (this.typeOfParse >= 0)
+			parseSentencesNew();
 		calculate();
+	}
+	private void parseSentencesNew() {
+		Sentence sentenceBefore = null;
+		for (int i = 0; i < sentList.size(); i++) {
+			
+			Sentence gottenSentence = sentList.get(i);
+			
+			if (gottenSentence.isQuestion == true) {
+				totalQuestions++;
+			} else {
+				totalNormals++;
+			}
+			
+			if (i == 0) {
+				sentenceBefore = gottenSentence;
+			}	
+			int kBestNum = 0;
+			for (Tree tree : gottenSentence.getkBestTrees()) {
+
+				if (typeOfParse == 1) { // parsetype = 1, do Soft Command analysis
+					if (gottenSentence.softCommand == false) {
+						if (findSoftCommands(tree, gottenSentence, sentenceBefore)) {
+							gottenSentence.softCommand = true;
+							gottenSentence.detectedKBest = kBestNum;
+						}
+					}
+				}
+				if (typeOfParse == 2) { // parsetype = 2, do Direct Command
+										// analysis
+					if (findHardCommands(tree, gottenSentence, sentenceBefore)) {
+						gottenSentence.hardCommand = true;
+						gottenSentence.detectedKBest = kBestNum;
+					}
+				}
+				if (typeOfParse == 0) { // parsetype = 0, do Question analysis
+					String str = tree.toString();
+					String tag = tagCheck(str, gottenSentence);
+					if (!tag.equals("none , ")) {
+						if (gottenSentence.detectedKBest == -1) {
+							gottenSentence.detectedKBest = kBestNum;
+						}
+					}
+					gottenSentence.tags = gottenSentence.tags + tag;
+
+				}
+				kBestNum++;
+			}
+
+			if (gottenSentence.findResult()) {
+				detectedQs++;
+			} else {
+				detectedNs++;
+			}
+
+			organizeSent(gottenSentence);
+
+			AnaphoraParser ap = new AnaphoraParser(gottenSentence, sentenceBefore);
+			sentenceBefore = gottenSentence;
+		}
+
 	}
 
 	private void parseSentences(LexicalizedParser lp) {
@@ -75,10 +138,10 @@ public class QParser {
 		Sentence gottenSentence;
 		Sentence sentenceBefore = null;
 
-		System.err.println("sLize.size() - " + sList.size());
+		System.err.println("sLize.size() - " + sentList.size());
 		for (int i = 0; i < 5; i++) {
 
-			gottenSentence = sList.get(i);
+			gottenSentence = sentList.get(i);
 
 			if (i == 0) {
 				sentenceBefore = gottenSentence;
@@ -119,7 +182,7 @@ public class QParser {
 			// OutputWriter.write(gottenSentence.kBest.get(0).object());
 			for (ScoredObject<Tree> tree : gottenSentence.kBest) {
 
-				if (parseType == 1) { // parsetype = 1, do Soft Command analysis
+				if (typeOfParse == 1) { // parsetype = 1, do Soft Command analysis
 					if (gottenSentence.softCommand == false) {
 						if (findSoftCommands(tree.object(), gottenSentence, sentenceBefore)) {
 							gottenSentence.softCommand = true;
@@ -127,14 +190,14 @@ public class QParser {
 						}
 					}
 				}
-				if (parseType == 2) { // parsetype = 2, do Direct Command
+				if (typeOfParse == 2) { // parsetype = 2, do Direct Command
 										// analysis
 					if (findHardCommands(tree.object(), gottenSentence, sentenceBefore)) {
 						gottenSentence.hardCommand = true;
 						gottenSentence.detectedKBest = kBestNum;
 					}
 				}
-				if (parseType == 0) { // parsetype = 0, do Question analysis
+				if (typeOfParse == 0) { // parsetype = 0, do Question analysis
 					str = tree.toString();
 					String tag = tagCheck(str, gottenSentence);
 					if (!tag.equals("none , ")) {
@@ -188,7 +251,7 @@ public class QParser {
 			match = matcher.getMatch();
 
 			if (match.yield().toString().equalsIgnoreCase("[you]")) {
-				String verb = null;
+				String verb = "null";
 				patternMW = TregexPattern.compile("VB > (VP $- (MD > (VP $ NP)))");
 				TregexMatcher matcher1 = patternMW.matcher(t);
 
@@ -388,7 +451,7 @@ public class QParser {
 					if (line.equals("Thank you.")) {
 						line = "Thank.";
 					}
-					sList.add(new Sentence(line, n));
+					sentList.add(new Sentence(line, n));
 					n++;
 				}
 

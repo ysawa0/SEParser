@@ -1,5 +1,5 @@
 *.class
-
+bin\*.class
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
@@ -93,3 +93,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 /bin/
+*.class
+*.class
+bin/PairChecker.class

@@ -15,6 +15,9 @@ public class Main {
 	// lp - the Parser Model 
 	public static void main(String[] args) {
 		
+		long startTime = System.currentTimeMillis();
+
+		
 		String input = "input.txt"; // Example input for DEFCON presentation
 		input = "supcourt.txt";
 		String ex = "defcon_ex.txt";
@@ -22,6 +25,7 @@ public class Main {
 		lp = LexicalizedParser.loadModel("englishPCFG.ser.gz");
 		
 		String supcourt = "supcourt_splitbyperiod.txt";
+		String superrors = "supcourt-errors.txt";
 //		questionParse(input, 6);
 //		softCommandParse(input, 3);
 //		hardCommandParse(input, 3);
@@ -29,13 +33,20 @@ public class Main {
 		
 		OutputWriter.writeOverallResults("\n# of parses used: " + numOfParses);
 		ArrayList<Sentence> sentList = ParseTreeMaker.makeParseTrees(supcourt, lp, numOfParses);
+		OutputWriter.writeOverallResults("# of sentences total: " + sentList.size());
 		questionParse(input, 1, sentList);
 		softCommandParse(input, 1, sentList);
 		hardCommandParse(input, 1, sentList);
 		
-		OutputWriter.printAll();
 		
-		overallResults.forEach(System.out::println);
+		
+		long endTime = System.currentTimeMillis();
+		double totalTime = endTime - startTime;
+		totalTime = totalTime/1000.;
+		OutputWriter.writeOverallResults("Total execution time: " + Double.toString(totalTime) + " seconds");
+		
+		OutputWriter.printAll();
+//		overallResults.forEach(System.out::println);
 	}
 	
 	private static void addResults(int numberResults) {
@@ -57,7 +68,14 @@ public class Main {
 			pairCheck.blacklistCheck2();
 		}
 		
+		int numMalicious = 0;
+		for (Sentence sent : qp.sentList) {
+			if (sent.isMalicious()) numMalicious++;
+		}
 		OutputWriter.writeOverallResults("# questions: " + qp.qList.size());
+		
+		OutputWriter.writeOverallResults("# of malicious questions: " + numMalicious);
+		
 	}
 
 	// Analyzes the input for Soft Commands and see if any of them are malicious
@@ -76,8 +94,13 @@ public class Main {
 			pairCheck.blacklistCheck2();
 			
 		}
+		int numMalicious = 0;
+		for (Sentence sent : qp.sentList) {
+			if (sent.isMalicious()) numMalicious++;
+		}
+		
 		OutputWriter.writeOverallResults("# soft commands: " + qp.softList.size());
-
+		OutputWriter.writeOverallResults("# of malicious soft commands: " + numMalicious);
 	}
 	
 	// Analyzes the input for Hard Commands and see if any of them are malicious
@@ -94,11 +117,15 @@ public class Main {
 			printSentences(s);
 			PairChecker pairCheck = new PairChecker(s);
 			pairCheck.blacklistCheck2();
-			
-
+		}
+		
+		int numMalicious = 0;
+		for (Sentence sent : qp.sentList) {
+			if (sent.isMalicious()) numMalicious++;
 		}
 		
 		OutputWriter.writeOverallResults("# direct commands: " + qp.hardList.size());
+		OutputWriter.writeOverallResults("# of malicious direct commands: " + numMalicious);
 	}
 	
 	public static void printSentences(Sentence s) {

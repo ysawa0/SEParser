@@ -16,9 +16,16 @@ import edu.stanford.nlp.util.ScoredObject;
 
 // parseSentences - Given an ArrayList<Sentence> takes each one and gets the parse tree using Stanford Parser.
 // readFile - Given a text file with sentences on each line, create a Sentence object out of each and store it in an ArrayList<Sentence>
-public class ParseTreeMaker {
+public class ParseTreeMakerRunnable implements Runnable {
 	
-	public static ArrayList<Sentence> makeParseTrees(String filename, LexicalizedParser lp, int numOfParses) {
+	public ParseTreeMakerRunnable() {
+		Thread mythread = new Thread(this, "ParseTreeMakerRunnable");
+		mythread.start();
+	}
+	public void run() { 
+		
+	}
+	public ArrayList<Sentence> makeParseTrees(String filename, LexicalizedParser lp, int numOfParses) {
 		ArrayList<Sentence> sentList = readFile(filename);
 		sentList = parseSentences(sentList, lp, numOfParses);
 		
@@ -28,7 +35,7 @@ public class ParseTreeMaker {
 	// Given an ArrayList<Sentence> returned from readFile() use the PCFG Stanford Parser Model specified in LexicalizedParser lp
 	// to find numOfParses many parse trees. These are called the kBest parse trees. Where k = numOfParses
 	// After finding the kBest parses, store them in the Sentence object as Sentence.kBest
-	private static ArrayList<Sentence> parseSentences(ArrayList<Sentence> sentList, LexicalizedParser lp, int numOfParses) {
+	private ArrayList<Sentence> parseSentences(ArrayList<Sentence> sentList, LexicalizedParser lp, int numOfParses) {
 		LexicalizedParserQuery lpq = lp.lexicalizedParserQuery();
 		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
 		List<? extends HasWord> sent;
@@ -45,21 +52,21 @@ public class ParseTreeMaker {
 			toke = tlp.getTokenizerFactory().getTokenizer(new StringReader(gottenSentence.sent));
 			sent = toke.tokenize();
 			
-//			// Ignore one word sentences
-//			if (sent.size() == 2) {
-//				sentList.remove(i);
-//				continue;
-//			}
+			// Ignore one word sentences
+			if (sent.size() == 2) {
+				sentList.remove(i);
+				continue;
+			}
 			
-			// Print each sentence and how many words are in it
-//			StringBuilder sb = new StringBuilder();
-//			sb.append(i);
-//			sb.append(" - # of words: ");
-//			sb.append(sent.size());
-//			sb.append(" - ");
-//			sb.append(gottenSentence.getSentenceString());
-//			System.err.println(sb);
-			
+			StringBuilder sb = new StringBuilder();
+			sb.append(i);
+			sb.append(" - # of words: ");
+			sb.append(sent.size());
+			sb.append(" - ");
+			sb.append(gottenSentence.getSentenceString());
+			System.err.println(sb);
+			// System.err.println(i + " - sentence size:" + sent.size() + " - "
+			// + gottenSentence.getSentenceString());
 
 //			if (sent.size() >= 200)
 //				continue;
@@ -81,12 +88,12 @@ public class ParseTreeMaker {
 	// Given a filename of the input text file, read it in line by line.
 	// For each line a Sentence object is created and saved in an ArrayList<Sentence>
 	// return the ArrayList at the end.
-	private static ArrayList<Sentence> readFile(String filename) {
+	private ArrayList<Sentence> readFile(String filename) {
 		ArrayList<Sentence> sentList = new ArrayList<Sentence>();
 		int n = 1;
 		
 		//
-		int numberOfLinesToParse = 10;
+		int numberOfLinesToParse = 200;
 		//
 		
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
@@ -111,7 +118,7 @@ public class ParseTreeMaker {
 	}
 	
 	// preprocess certain sentences/lines to make them parser friendly and easier to analyze
-	private static String preprocessLine(final String line) {
+	private String preprocessLine(final String line) {
 		String preprocessedLine = line;
 		if ("Uh huh.".equals(line)) {
 			preprocessedLine = "Yes.";

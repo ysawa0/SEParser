@@ -66,7 +66,7 @@ public class QParser {
 //		if (parseType >= 0)
 //			parseSentences(lex);
 		if (this.typeOfParse >= 0)
-			parseSentencesNew();;
+			parseSentencesNew();
 		calculate();
 	}
 	private void parseSentencesNew() {

@@ -18,8 +18,8 @@ import edu.stanford.nlp.util.ScoredObject;
 // readFile - Given a text file with sentences on each line, create a Sentence object out of each and store it in an ArrayList<Sentence>
 public class ParseTreeMaker {
 	
-	public static ArrayList<Sentence> makeParseTrees(String filename, LexicalizedParser lp, int numOfParses) {
-		ArrayList<Sentence> sentList = readFile(filename);
+	public static ArrayList<Sentence> makeParseTrees(String filename, LexicalizedParser lp, int numOfParses, int numberOfLinesToParse) {
+		ArrayList<Sentence> sentList = readFile(filename, numberOfLinesToParse);
 		sentList = parseSentences(sentList, lp, numOfParses);
 		
 		return sentList;
@@ -77,17 +77,38 @@ public class ParseTreeMaker {
 		
 		return sentList;
 	}
+
+	private static ArrayList<Sentence> readFileMultiThread(String filename, int numberOfLinesToParse) {
+		ArrayList<Sentence> sentList = new ArrayList<Sentence>();
+		int n = 1;
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+			String line = br.readLine();
+			while (line != null) {
+				if ( n > numberOfLinesToParse) break;
+				if (!"".equals(line)) {
+					line = preprocessLine(line);
+
+					sentList.add(new Sentence(line, n));
+					n++;
+				}
+
+				line = br.readLine();
+			}
+		} catch (IOException e) {
+			System.err.println("Error in readFile()");
+			e.printStackTrace();
+		}
+		System.out.println(sentList.size());
+		return sentList;
+	}
 	
 	// Given a filename of the input text file, read it in line by line.
 	// For each line a Sentence object is created and saved in an ArrayList<Sentence>
 	// return the ArrayList at the end.
-	private static ArrayList<Sentence> readFile(String filename) {
+	private static ArrayList<Sentence> readFile(String filename, int numberOfLinesToParse) {
 		ArrayList<Sentence> sentList = new ArrayList<Sentence>();
 		int n = 1;
-		
-		//
-		int numberOfLinesToParse = 10;
-		//
 		
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			String line = br.readLine();

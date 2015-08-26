@@ -1,7 +1,5 @@
-
-
-
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 
@@ -30,9 +28,74 @@ public class Main {
 //		softCommandParse(input, 3);
 //		hardCommandParse(input, 3);
 		int numOfParses = 3;
+		int numberOfLinesToParse = 100;
 		
 		OutputWriter.writeOverallResults("\n# of parses used: " + numOfParses);
-		ArrayList<Sentence> sentList = ParseTreeMaker.makeParseTrees(supcourt, lp, numOfParses);
+		ArrayList<Sentence> sentList = ParseTreeMaker.makeParseTrees(supcourt, lp, numOfParses, numberOfLinesToParse);
+		
+		List<Sentence> list1 = sentList.subList(0, 50);
+		List<Sentence> list2 = sentList.subList(50, 100);
+		
+//		List<List<Sentence>> choppedLists = chopped(sentList, 5);
+//		System.out.println("size chopped " + choppedLists.size());
+//		for (List<Sentence> list : choppedLists) {
+//			Thread thread = new Thread(new StanfordParseMakerTest(sentList, lp, numOfParses));
+//			thread.start();
+//		}
+		
+		Thread thread1 = new Thread(new StanfordParseMakerTest(list1, lp, numOfParses));
+		thread1.start();
+		
+		Thread thread2 = new Thread(new StanfordParseMakerTest(list2, lp, numOfParses));
+		thread2.start();
+		
+		OutputWriter.writeOverallResults("# of sentences total: " + sentList.size());
+
+		
+		
+		
+		long endTime = System.currentTimeMillis();
+		double totalTime = endTime - startTime;
+		totalTime = totalTime/1000.;
+		OutputWriter.writeOverallResults("Total execution time: " + Double.toString(totalTime) + " seconds");
+		
+		OutputWriter.printAll();
+//		overallResults.forEach(System.out::println);
+	}
+	
+	// chops a list into non-view sublists of length L
+	static <T> List<List<T>> chopped(List<T> list, final int L) {
+	    List<List<T>> parts = new ArrayList<List<T>>();
+	    final int N = list.size();
+	    for (int i = 0; i < N; i += L) {
+	        parts.add(new ArrayList<T>(
+	            list.subList(i, Math.min(N, i + L)))
+	        );
+	    }
+	    return parts;
+	}
+
+	
+	public static void defaultMain() {
+		
+		long startTime = System.currentTimeMillis();
+
+		
+		String input = "input.txt"; // Example input for DEFCON presentation
+		input = "supcourt.txt";
+		String ex = "defcon_ex.txt";
+		String allattacks = "all attacks.txt";
+		lp = LexicalizedParser.loadModel("englishPCFG.ser.gz");
+		
+		String supcourt = "supcourt_splitbyperiod.txt";
+		String superrors = "supcourt-errors.txt";
+//		questionParse(input, 6);
+//		softCommandParse(input, 3);
+//		hardCommandParse(input, 3);
+		int numOfParses = 3;
+		
+		OutputWriter.writeOverallResults("\n# of parses used: " + numOfParses);
+		ArrayList<Sentence> sentList = ParseTreeMaker.makeParseTrees(supcourt, lp, numOfParses, 1000);
 		OutputWriter.writeOverallResults("# of sentences total: " + sentList.size());
 		questionParse(input, 1, sentList);
 		softCommandParse(input, 1, sentList);
@@ -46,11 +109,7 @@ public class Main {
 		OutputWriter.writeOverallResults("Total execution time: " + Double.toString(totalTime) + " seconds");
 		
 		OutputWriter.printAll();
-//		overallResults.forEach(System.out::println);
-	}
-	
-	private static void addResults(int numberResults) {
-		
+//		overallResults.forEach(System.out::println);		
 	}
 	
 	// Analyzes the input for questions and see if any of them are malicious

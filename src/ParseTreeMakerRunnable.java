@@ -22,9 +22,11 @@ public class ParseTreeMakerRunnable implements Runnable {
 		Thread mythread = new Thread(this, "ParseTreeMakerRunnable");
 		mythread.start();
 	}
+	
 	public void run() { 
 		
 	}
+	
 	public ArrayList<Sentence> makeParseTrees(String filename, LexicalizedParser lp, int numOfParses) {
 		ArrayList<Sentence> sentList = readFile(filename);
 		sentList = parseSentences(sentList, lp, numOfParses);

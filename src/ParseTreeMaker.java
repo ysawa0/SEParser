@@ -16,6 +16,11 @@ import edu.stanford.nlp.util.ScoredObject;
 
 // parseSentences - Given an ArrayList<Sentence> takes each one and gets the parse tree using Stanford Parser.
 // readFile - Given a text file with sentences on each line, create a Sentence object out of each and store it in an ArrayList<Sentence>
+
+/*
+ * This class generates a parse tree for each sentence then passes it to TParser and PairChecker to see if they are a question/command and
+ * to check against the topic blacklist
+ */
 public class ParseTreeMaker {
 	
 	public static ArrayList<Sentence> makeParseTrees(String filename, LexicalizedParser lp, int numOfParses, int numberOfLinesToParse) {
@@ -61,9 +66,6 @@ public class ParseTreeMaker {
 //			System.err.println(sb);
 			
 
-//			if (sent.size() >= 200)
-//				continue;
-
 			lpq.parse(sent);
 			List<ScoredObject<Tree>> kbest = lpq.getKBestPCFGParses(numOfParses);
 			gottenSentence.setKBest(kbest);
@@ -71,8 +73,6 @@ public class ParseTreeMaker {
 			
 			// Save the previous sentence in "sentenceBefore"
 			// Do Anaphora resolution analysis by creating new AnaphoraParser object
-
-
 		}
 		
 		return sentList;

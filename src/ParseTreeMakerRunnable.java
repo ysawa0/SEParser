@@ -16,6 +16,8 @@ import edu.stanford.nlp.util.ScoredObject;
 
 // parseSentences - Given an ArrayList<Sentence> takes each one and gets the parse tree using Stanford Parser.
 // readFile - Given a text file with sentences on each line, create a Sentence object out of each and store it in an ArrayList<Sentence>
+
+// Runnable implementation for multi-threading approach to parsing
 public class ParseTreeMakerRunnable implements Runnable {
 	
 	public ParseTreeMakerRunnable() {

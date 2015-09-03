@@ -12,6 +12,10 @@ public class Main {
 	// input - the input text file. Each sentence should be on its own line and end with a period
 	// lp - the Parser Model 
 	public static void main(String[] args) {
+		multiThreadMain(10);
+	}
+	
+	public static void multiThreadMain(int numberOfLinesToParse) {
 		
 		long startTime = System.currentTimeMillis();
 
@@ -28,13 +32,15 @@ public class Main {
 //		softCommandParse(input, 3);
 //		hardCommandParse(input, 3);
 		int numOfParses = 3;
-		int numberOfLinesToParse = 100;
 		
 		OutputWriter.writeOverallResults("\n# of parses used: " + numOfParses);
 		ArrayList<Sentence> sentList = ParseTreeMaker.makeParseTrees(supcourt, lp, numOfParses, numberOfLinesToParse);
 		
-		List<Sentence> list1 = sentList.subList(0, 50);
-		List<Sentence> list2 = sentList.subList(50, 100);
+		double half = Math.floor(numberOfLinesToParse / 2.);
+		int halfOfNumLinesToParse = (int) half;
+		System.err.println(halfOfNumLinesToParse);
+		List<Sentence> list1 = sentList.subList(0, halfOfNumLinesToParse);
+		List<Sentence> list2 = sentList.subList(halfOfNumLinesToParse, numberOfLinesToParse);
 		
 //		List<List<Sentence>> choppedLists = chopped(sentList, 5);
 //		System.out.println("size chopped " + choppedLists.size());
@@ -59,22 +65,8 @@ public class Main {
 		totalTime = totalTime/1000.;
 		OutputWriter.writeOverallResults("Total execution time: " + Double.toString(totalTime) + " seconds");
 		
-		OutputWriter.printAll();
-//		overallResults.forEach(System.out::println);
+		OutputWriter.printAll();		
 	}
-	
-	// chops a list into non-view sublists of length L
-	static <T> List<List<T>> chopped(List<T> list, final int L) {
-	    List<List<T>> parts = new ArrayList<List<T>>();
-	    final int N = list.size();
-	    for (int i = 0; i < N; i += L) {
-	        parts.add(new ArrayList<T>(
-	            list.subList(i, Math.min(N, i + L)))
-	        );
-	    }
-	    return parts;
-	}
-
 	
 	public static void defaultMain() {
 		
@@ -197,6 +189,17 @@ public class Main {
 		}
 	}
 		
+	// chops a list into non-view sublists of length L
+	static <T> List<List<T>> chopped(List<T> list, final int L) {
+		List<List<T>> parts = new ArrayList<List<T>>();
+		final int N = list.size();
+		for (int i = 0; i < N; i += L) {
+			parts.add(new ArrayList<T>(
+					list.subList(i, Math.min(N, i + L)))
+					);
+		}
+		return parts;
+	}
 
 
 }

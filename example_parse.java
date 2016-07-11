@@ -16,12 +16,15 @@ import java.util.List;
 
 // Example code to get parse trees for one sentence.
 // To Compile and run 
+
 // For Linux, Mac OS X:
 // javac -cp "./stanford-parser.jar" example_parse.java
 // java -cp "./stanford-parser.jar:./" example_parse
+
 // On Windows:
 // javac -cp "./stanford-parser.jar" example_parse.java
 // java -cp "./stanford-parser.jar;./" example_parse
+
 // Sample output:
 // Loading parser from serialized file englishPCFG.ser.gz ...  done [0.4 sec].
 // (ROOT (S (NP (PRP I)) (VP (VBP 'm) (NP (DT a) (NN test) (NN sentence))) (. .)))

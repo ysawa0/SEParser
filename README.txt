@@ -11,6 +11,11 @@ It can also be downloaded from: http://nlp.stanford.edu/software/lex-parser.shtm
 Make sure stanford-parser.jar is in the main folder. It should be included in the zip file.
 It can also be downloaded from: http://nlp.stanford.edu/software/lex-parser.shtml#Download
 
-4.
-Compile: javac -classpath "./stanford-parser.jar" ./src/*.java
-Run: java -classpath "./stanford-parser.jar;./src" Main
+4. Compile and run
+Windows:
+javac -classpath "./stanford-parser.jar" ./src/*.java
+java -classpath "./stanford-parser.jar;./src" Main
+
+Linux/OSX:
+javac -classpath "./stanford-parser.jar" ./src/*.java
+java -classpath "./stanford-parser.jar:./src" Main

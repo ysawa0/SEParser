@@ -19,20 +19,17 @@ public class Main {
 
 		
 		String input = "input.txt"; // Example input for DEFCON presentation
-		input = "supcourt.txt";
-		String ex = "defcon_ex.txt";
-		String allattacks = "all attacks.txt";
 		lp = LexicalizedParser.loadModel("englishPCFG.ser.gz");
 		
-		String supcourt = "supcourt_splitbyperiod.txt";
-		String superrors = "supcourt-errors.txt";
+		// String supcourt = "supcourt_splitbyperiod.txt";
+		// String superrors = "supcourt-errors.txt";
 //		questionParse(input, 6);
 //		softCommandParse(input, 3);
 //		hardCommandParse(input, 3);
 		int numOfParses = 3;
 		
 		OutputWriter.writeOverallResults("\n# of parses used: " + numOfParses);
-		ArrayList<Sentence> sentList = ParseTreeMaker.makeParseTrees(supcourt, lp, numOfParses);
+		ArrayList<Sentence> sentList = ParseTreeMaker.makeParseTrees(input, lp, numOfParses);
 		OutputWriter.writeOverallResults("# of sentences total: " + sentList.size());
 		questionParse(input, 1, sentList);
 		softCommandParse(input, 1, sentList);
@@ -47,10 +44,6 @@ public class Main {
 		
 		OutputWriter.printAll();
 //		overallResults.forEach(System.out::println);
-	}
-	
-	private static void addResults(int numberResults) {
-		
 	}
 	
 	// Analyzes the input for questions and see if any of them are malicious

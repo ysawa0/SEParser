@@ -14,6 +14,9 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.stanford.nlp.trees.tregex.TregexMatcher;
+import edu.stanford.nlp.trees.tregex.TregexPattern;
+
 // Example code to get parse trees for one sentence.
 // To Compile and run 
 
@@ -41,7 +44,9 @@ public class example_parse {
         LexicalizedParserQuery lpq = lp.lexicalizedParserQuery();
         TreebankLanguagePack tlp = new PennTreebankLanguagePack();
 
-        String sentence = "I'm a test sentence.";
+        // String sentence = "I'm a test sentence.";
+        String sentence = "Can you give me your social?";
+        // String sentence = "If you could send me the certificate I would appreciate it.";
 
         // Parse the sentence
         Tokenizer<? extends HasWord> toke = tlp.getTokenizerFactory().getTokenizer(new StringReader(sentence));
@@ -49,13 +54,23 @@ public class example_parse {
         lpq.parse(sent);
 
         // Get the results. the kBestTrees are the top k best parse trees for the sentence.
-        int numOfParses = 5; // Get the top 5 parse trees
+        int numOfParses = 2; // Get the top 2 parse trees
         List<ScoredObject<Tree>> kbest = lpq.getKBestPCFGParses(numOfParses);
+
         // Convert it to an ArrayList of Tree
         ArrayList<Tree> kBestTrees = getkBestTrees(kbest);
 
         for (Tree t : kBestTrees) {
             System.out.println(t);
+
+            // Find Nouns (NPs) in the parse tree
+            ArrayList<Tree> nounList = findNounPhrases(t);
+            
+            System.out.println("Found some noun phrases:");
+            for (Tree t2 : nounList) {
+                System.out.println(t2);
+            }
+            System.out.println();
         }
     }
 
@@ -68,4 +83,18 @@ public class example_parse {
         return kBestTrees;
     }
 
+    // Parse each Tree using Tregex and find all NPs
+    // NP is a Noun Phrase
+    public static ArrayList<Tree> findNounPhrases(Tree t) {
+        // Intialize TregexPattern, pass it the pattern and parse the tree
+        TregexPattern pattern = TregexPattern.compile("NP");
+        TregexMatcher matcher = pattern.matcher(t);
+        ArrayList<Tree> list = new ArrayList<Tree>();
+
+        while (matcher.findNextMatchingNode()) {
+            Tree match = matcher.getMatch();
+            list.add(match);
+        }
+        return list;
+    }
 }

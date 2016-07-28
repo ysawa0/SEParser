@@ -96,3 +96,7 @@ Temporary Items
 *.class
 *.class
 bin/PairChecker.class
+
+
+englishPCFG.ser.gz
+stanford-parser.jar

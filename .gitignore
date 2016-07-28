@@ -100,3 +100,6 @@ bin/PairChecker.class
 
 englishPCFG.ser.gz
 stanford-parser.jar
+supcourt.txt
+supcourt-errors.txt
+supcourt_splitbyperiod.txt

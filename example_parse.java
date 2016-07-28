@@ -17,24 +17,32 @@ import java.util.List;
 import edu.stanford.nlp.trees.tregex.TregexMatcher;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
 
-// Example code to get parse trees for one sentence.
-// To Compile and run 
+/*
+Example code to get parse trees for one sentence.
+To Compile and run 
 
-// For Linux, Mac OS X:
-// javac -cp "./stanford-parser.jar" example_parse.java
-// java -cp "./stanford-parser.jar:./" example_parse
+For Linux, Mac OS X:
+javac -cp "./stanford-parser.jar" example_parse.java
+java -cp "./stanford-parser.jar:./" example_parse
 
-// On Windows:
-// javac -cp "./stanford-parser.jar" example_parse.java
-// java -cp "./stanford-parser.jar;./" example_parse
+On Windows:
+javac -cp "./stanford-parser.jar" example_parse.java
+java -cp "./stanford-parser.jar;./" example_parse
 
-// Sample output:
-// Loading parser from serialized file englishPCFG.ser.gz ...  done [0.4 sec].
-// (ROOT (S (NP (PRP I)) (VP (VBP 'm) (NP (DT a) (NN test) (NN sentence))) (. .)))
-// (ROOT (S (NP (PRP I)) (VP (VBP 'm) (NP (DT a) (NN test) (NN sentence))) (. .)))
-// (ROOT (S (NP (PRP I)) (VP (VBP 'm) (NP (DT a) (JJ test) (NN sentence))) (. .)))
-// (ROOT (S (NP (PRP I)) (VP (VBP 'm) (NP (DT a) (NN test) (NN sentence))) (. .)))
-// (ROOT (S (NP (PRP I)) (VP (VBP 'm) (NP (NP (DT a) (NN test)) (NP (NN sentence)))) (. .)))
+Sample output:
+Loading parser from serialized file englishPCFG.ser.gz ...  done [0.4 sec].
+(ROOT (SQ (MD Can) (NP (PRP you)) (VP (VB give) (NP (PRP me)) (NP (PRP$ your) (JJ social))) (. ?)))
+Found some noun phrases:
+(NP (PRP you))
+(NP (PRP me))
+(NP (PRP$ your) (JJ social))
+
+(ROOT (SQ (MD Can) (NP (PRP you)) (VP (VB give) (NP (PRP me)) (NP (PRP$ your) (NN social))) (. ?)))
+Found some noun phrases:
+(NP (PRP you))
+(NP (PRP me))
+(NP (PRP$ your) (NN social))
+*/
 
 public class example_parse {
 

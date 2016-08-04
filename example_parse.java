@@ -42,6 +42,8 @@ Found some noun phrases:
 (NP (PRP you))
 (NP (PRP me))
 (NP (PRP$ your) (NN social))
+
+Is the sentence a question: true
 */
 
 public class example_parse {
@@ -80,6 +82,10 @@ public class example_parse {
             }
             System.out.println();
         }
+
+        //EXAMPLE: Identifing Questions
+        boolean x = isQuestion(kBestTrees.get(0));
+        System.out.println("Is the sentence a question: " + x);
     }
 
     // convert List<Scoredobject<Tree>> to ArrayList<Tree>
@@ -104,5 +110,23 @@ public class example_parse {
             list.add(match);
         }
         return list;
+    }
+
+
+    // Check if the sentence is a question. Questions (usually) involve a SBARQ, SQ, or SINV in their parse tree.
+    private static boolean isQuestion(Tree t) {
+        //Check if top node is SBARQ, SQ, or SINV
+        if (t.value().equals("SBARQ") || t.value().equals("SQ") || t.value().equals("SINV")) {
+            return true;
+        }
+        
+        Tree[] tarray = t.children();
+        // Recurse into children nodes
+        for (int i=0; i < tarray.length; i++) {
+            if (isQuestion(tarray[i]) == true) {
+                return true;
+            }
+        }
+        return false;
     }
 }

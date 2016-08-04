@@ -10,6 +10,7 @@ http://nlp.stanford.edu/software/stanford-parser-full-2015-04-20.zip
 englishPCFG.ser.gz
 http://nlp.stanford.edu/software/stanford-english-corenlp-2016-01-10-models.jar
 
+I have included examples showing how to use the Stanford Parser API in example_parse.java
 
 1. 
 Download both files above

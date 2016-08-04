@@ -43,7 +43,9 @@ Found some noun phrases:
 (NP (PRP me))
 (NP (PRP$ your) (NN social))
 
-Is the sentence a question: true
+Found 2 subtrees:
+(SBARQ (WHNP (WP What)) (SQ (VBD were) (NP (DT the) (RBS most) (JJ important) (NNS wars)) (VP (VBN fought) (PP (IN in) (NP (NP (DT the) (NN history)) (PP (IN of) (NP (DT the) (NNP United) (NNPS States))))))) (. ?))
+(SQ (VBD were) (NP (DT the) (RBS most) (JJ important) (NNS wars)) (VP (VBN fought) (PP (IN in) (NP (NP (DT the) (NN history)) (PP (IN of) (NP (DT the) (NNP United) (NNPS States)))))))
 */
 
 public class example_parse {
@@ -83,9 +85,24 @@ public class example_parse {
             System.out.println();
         }
 
-        //EXAMPLE: Identifing Questions
-        boolean x = isQuestion(kBestTrees.get(0));
-        System.out.println("Is the sentence a question: " + x);
+        //EXAMPLE: Identifing questions and retrieving subtrees
+        String sentence2 = "What were the most important wars fought in the history of the United States?";
+        Tokenizer<? extends HasWord> toke2 = tlp.getTokenizerFactory().getTokenizer(new StringReader(sentence2));
+        List<? extends HasWord> sent2 = toke2.tokenize();
+        lpq.parse(sent2);
+        List<ScoredObject<Tree>> kbest2 = lpq.getKBestPCFGParses(1);
+        ArrayList<Tree> kBestTrees2 = getkBestTrees(kbest2);
+
+        ArrayList<Tree> subtrees = new ArrayList<Tree>();
+        
+        // Look for subtrees starting with question tags (SQ, SBARQ, SINV)
+        isQuestion(kBestTrees2.get(0), subtrees);
+        // System.out.println("Is the sentence a question: " + x);
+
+        System.out.println("Found " + subtrees.size() + " subtrees: ");
+        for (Tree t : subtrees) {
+            System.out.println(t);
+        }
     }
 
     // convert List<Scoredobject<Tree>> to ArrayList<Tree>
@@ -114,19 +131,16 @@ public class example_parse {
 
 
     // Check if the sentence is a question. Questions (usually) involve a SBARQ, SQ, or SINV in their parse tree.
-    private static boolean isQuestion(Tree t) {
+    private static void isQuestion(Tree t, ArrayList<Tree> subtrees) {
         //Check if top node is SBARQ, SQ, or SINV
         if (t.value().equals("SBARQ") || t.value().equals("SQ") || t.value().equals("SINV")) {
-            return true;
+            subtrees.add(t);
         }
         
         Tree[] tarray = t.children();
         // Recurse into children nodes
         for (int i=0; i < tarray.length; i++) {
-            if (isQuestion(tarray[i]) == true) {
-                return true;
-            }
+            isQuestion(tarray[i], subtrees);
         }
-        return false;
     }
 }

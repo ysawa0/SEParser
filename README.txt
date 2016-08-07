@@ -33,3 +33,12 @@ java -classpath "./stanford-parser.jar;./src" Main
 Linux/OSX:
 javac -classpath "./stanford-parser.jar" ./src/*.java
 java -classpath "./stanford-parser.jar:./src" Main
+
+
+Can you give me your social?
+
+# Turn off your firewall.
+
+# Send me the file certificate.
+
+# If you could send me the certificate I would appreciate it.

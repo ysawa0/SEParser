@@ -17,14 +17,19 @@ import edu.stanford.nlp.util.ScoredObject;
 // parseSentences - Given an ArrayList<Sentence> takes each one and gets the parse tree using Stanford Parser.
 // readFile - Given a text file with sentences on each line, create a Sentence object out of each and store it in an ArrayList<Sentence>
 public class ParseTreeMaker {
-	
+
+	public static ArrayList<Sentence> makeOneParseTree(String str, LexicalizedParser lp, int numOfParses) {
+		ArrayList<Sentence> sentList = readString(str);
+		return parseSentences(sentList, lp, numOfParses);
+	}
+
 	public static ArrayList<Sentence> makeParseTrees(String filename, LexicalizedParser lp, int numOfParses) {
 		ArrayList<Sentence> sentList = readFile(filename);
 		sentList = parseSentences(sentList, lp, numOfParses);
-		
+
 		return sentList;
 	}
-	
+
 	// Given an ArrayList<Sentence> returned from readFile() use the PCFG Stanford Parser Model specified in LexicalizedParser lp
 	// to find numOfParses many parse trees. These are called the kBest parse trees. Where k = numOfParses
 	// After finding the kBest parses, store them in the Sentence object as Sentence.kBest
@@ -37,20 +42,20 @@ public class ParseTreeMaker {
 		Sentence sentenceBefore = null; // Store the previous sentence so it can be looked at for anaphora resolution
 
 		System.err.println("sentList.size() - " + sentList.size());
-		
+
 		for (int i = 0; i < sentList.size(); i++) {
 
 			gottenSentence = sentList.get(i);
 
 			toke = tlp.getTokenizerFactory().getTokenizer(new StringReader(gottenSentence.sent));
 			sent = toke.tokenize();
-			
+
 //			// Ignore one word sentences
 //			if (sent.size() == 2) {
 //				sentList.remove(i);
 //				continue;
 //			}
-			
+
 			// Print each sentence and how many words are in it
 //			StringBuilder sb = new StringBuilder();
 //			sb.append(i);
@@ -59,7 +64,7 @@ public class ParseTreeMaker {
 //			sb.append(" - ");
 //			sb.append(gottenSentence.getSentenceString());
 //			System.err.println(sb);
-			
+
 
 //			if (sent.size() >= 200)
 //				continue;
@@ -68,16 +73,22 @@ public class ParseTreeMaker {
 			List<ScoredObject<Tree>> kbest = lpq.getKBestPCFGParses(numOfParses);
 			gottenSentence.setKBest(kbest);
 			gottenSentence.numParses = numOfParses;
-			
+
 			// Save the previous sentence in "sentenceBefore"
 			// Do Anaphora resolution analysis by creating new AnaphoraParser object
 
 
 		}
-		
+
 		return sentList;
 	}
-	
+
+	private static ArrayList<Sentence> readString(String str) {
+		ArrayList<Sentence> sentList = new ArrayList<Sentence>();
+		sentList.add(new Sentence(str, 1));
+		return sentList;
+	}
+
 	// Given a filename of the input text file, read it in line by line.
 	// For each line a Sentence object is created and saved in an ArrayList<Sentence>
 	// return the ArrayList at the end.

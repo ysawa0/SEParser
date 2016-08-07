@@ -12,14 +12,27 @@ public class Main {
 	
 	// Main method 
 	// input - the input text file. Each sentence should be on its own line and end with a period
-	// lp - the Parser Model 
+	// lp - the Parser Model
 	public static void main(String[] args) {
+		lp = LexicalizedParser.loadModel("/Users/ysawa/b/academic/SEParser/englishPCFG.ser.gz");
+		String input = args[0]; // Read str from args
+		ArrayList<Sentence> sentList = ParseTreeMaker.makeOneParseTree(input, lp, 1);
+
+		questionParse(input, 1, sentList);
+		softCommandParse(input, 1, sentList);
+		hardCommandParse(input, 1, sentList);
+		OutputWriter.printAll();
+	}
+
+	public static void oldmain(String[] args) {
 		
 		long startTime = System.currentTimeMillis();
 
-		
+		String x = System.getProperty("user.dir");
+		System.out.println("dir:   " + x);
+
 		String input = "input.txt"; // Example input for DEFCON presentation
-		lp = LexicalizedParser.loadModel("englishPCFG.ser.gz");
+		lp = LexicalizedParser.loadModel("/Users/ysawa/b/academic/SEParser/englishPCFG.ser.gz");
 		
 		// String supcourt = "supcourt_splitbyperiod.txt";
 		// String superrors = "supcourt-errors.txt";

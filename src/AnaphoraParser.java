@@ -11,6 +11,7 @@ import edu.stanford.nlp.trees.tregex.TregexPattern;
 public class AnaphoraParser {
 	Sentence currentSent;
 	Sentence beforeSent;
+
 	public AnaphoraParser(Sentence cs, Sentence bs) {
 		currentSent = cs;
 		beforeSent = bs;

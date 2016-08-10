@@ -41,8 +41,6 @@ public class ParseTreeMaker {
 		Sentence gottenSentence;
 		Sentence sentenceBefore = null; // Store the previous sentence so it can be looked at for anaphora resolution
 
-		System.err.println("sentList.size() - " + sentList.size());
-
 		for (int i = 0; i < sentList.size(); i++) {
 
 			gottenSentence = sentList.get(i);

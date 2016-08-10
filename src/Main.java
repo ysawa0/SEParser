@@ -14,13 +14,18 @@ public class Main {
 	// input - the input text file. Each sentence should be on its own line and end with a period
 	// lp - the Parser Model
 	public static void main(String[] args) {
-		lp = LexicalizedParser.loadModel("/Users/ysawa/b/academic/SEParser/englishPCFG.ser.gz");
-		String input = args[0]; // Read str from args
-		ArrayList<Sentence> sentList = ParseTreeMaker.makeOneParseTree(input, lp, 1);
+		String dir = System.getProperty("user.dir") + "/SEParser/englishPCFG.ser.gz";
+		// System.out.println("dir:   " + dir);
 
-		questionParse(input, 1, sentList);
-		softCommandParse(input, 1, sentList);
-		hardCommandParse(input, 1, sentList);
+		// lp = LexicalizedParser.loadModel("/Users/ysawa/b/academic/SEParser/englishPCFG.ser.gz");
+		lp = LexicalizedParser.loadModel(dir);
+		String input = args[0]; // Read sentence from args
+		int numParses = 3;
+		ArrayList<Sentence> sentList = ParseTreeMaker.makeOneParseTree(input, lp, numParses);
+		OutputWriter.write(sentList.get(0).getkBestTrees().get(0));
+		questionParse(input, numParses, sentList);
+		softCommandParse(input, numParses, sentList);
+		hardCommandParse(input, numParses, sentList);
 		OutputWriter.printAll();
 	}
 

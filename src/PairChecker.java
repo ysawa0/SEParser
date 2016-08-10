@@ -42,8 +42,6 @@ public class PairChecker {
 	// Detect "that" or "it" and when found, replace them with the previous noun
 	// Find any Anaphora Resolution and replace the "that" or "it"
 	public void doAnaphoraDetection() {
-		
-		
 		for (VerbNounPair vnPair : sent.vnpairs) {
 //			OutputWriter.write("VNP verb: " + vnPair.verb);
 //			OutputWriter.write("VNP nouns: " + vnPair.nouns);

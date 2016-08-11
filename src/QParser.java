@@ -127,102 +127,6 @@ public class QParser {
 			AnaphoraParser ap = new AnaphoraParser(gottenSentence, sentenceBefore);
 			sentenceBefore = gottenSentence;
 		}
-
-	}
-
-	private void parseSentences(LexicalizedParser lp) {
-		lpq = lp.lexicalizedParserQuery();
-		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
-		List<? extends HasWord> sent;
-		Tokenizer<? extends HasWord> toke;
-		Sentence gottenSentence;
-		Sentence sentenceBefore = null;
-
-		System.err.println("sLize.size() - " + sentList.size());
-		for (int i = 0; i < 5; i++) {
-
-			gottenSentence = sentList.get(i);
-
-			if (i == 0) {
-				sentenceBefore = gottenSentence;
-			}
-
-			if (gottenSentence.isQuestion == true) {
-				totalQuestions++;
-			} else {
-				totalNormals++;
-			}
-
-			toke = tlp.getTokenizerFactory().getTokenizer(new StringReader(gottenSentence.sent));
-			sent = toke.tokenize();
-			// System.err.println(sent.toString());
-			StringBuilder sb = new StringBuilder();
-			sb.append(i);
-			sb.append(" - sentence size: ");
-			sb.append(sent.size());
-			sb.append(" - ");
-			sb.append(gottenSentence.getSentenceString());
-			System.err.println(sb);
-			// System.err.println(i + " - sentence size:" + sent.size() + " - "
-			// + gottenSentence.getSentenceString());
-
-			if (sent.size() >= 200)
-				continue;
-
-			lpq.parse(sent);
-			List<ScoredObject<Tree>> kbest = lpq.getKBestPCFGParses(numOfParses);
-			gottenSentence.setKBest(kbest);
-			gottenSentence.numParses = numOfParses;
-			String str = "";
-
-			int kBestNum = 0;
-
-			// OutputWriter.write("SENTENCE - " +
-			// gottenSentence.getSentenceString());
-			// OutputWriter.write(gottenSentence.kBest.get(0).object());
-			for (ScoredObject<Tree> tree : gottenSentence.kBest) {
-
-				if (typeOfParse == 1) { // parsetype = 1, do Soft Command analysis
-					if (gottenSentence.softCommand == false) {
-						if (findSoftCommands(tree.object(), gottenSentence, sentenceBefore)) {
-							gottenSentence.softCommand = true;
-							gottenSentence.detectedKBest = kBestNum;
-						}
-					}
-				}
-				if (typeOfParse == 2) { // parsetype = 2, do Direct Command
-										// analysis
-					if (findHardCommands(tree.object(), gottenSentence, sentenceBefore)) {
-						gottenSentence.hardCommand = true;
-						gottenSentence.detectedKBest = kBestNum;
-					}
-				}
-				if (typeOfParse == 0) { // parsetype = 0, do Question analysis
-					str = tree.toString();
-					String tag = tagCheck(str, gottenSentence);
-					if (!tag.equals("none , ")) {
-						if (gottenSentence.detectedKBest == -1) {
-							gottenSentence.detectedKBest = kBestNum;
-						}
-					}
-					gottenSentence.tags = gottenSentence.tags + tag;
-
-				}
-				kBestNum++;
-			}
-
-			if (gottenSentence.findResult()) {
-				detectedQs++;
-			} else {
-				detectedNs++;
-			}
-
-			organizeSent(gottenSentence);
-
-			AnaphoraParser ap = new AnaphoraParser(gottenSentence, sentenceBefore);
-			sentenceBefore = gottenSentence;
-		}
-
 	}
 
 	private void calculate() {
@@ -461,5 +365,99 @@ public class QParser {
 			e.printStackTrace();
 		}
 	}
+	// TODO: Should be OKAY to delete below
+	// private void parseSentences(LexicalizedParser lp) {
+	// 	lpq = lp.lexicalizedParserQuery();
+	// 	TreebankLanguagePack tlp = new PennTreebankLanguagePack();
+	// 	List<? extends HasWord> sent;
+	// 	Tokenizer<? extends HasWord> toke;
+	// 	Sentence gottenSentence;
+	// 	Sentence sentenceBefore = null;
 
+	// 	System.err.println("sLize.size() - " + sentList.size());
+	// 	for (int i = 0; i < 5; i++) {
+
+	// 		gottenSentence = sentList.get(i);
+
+	// 		if (i == 0) {
+	// 			sentenceBefore = gottenSentence;
+	// 		}
+
+	// 		if (gottenSentence.isQuestion == true) {
+	// 			totalQuestions++;
+	// 		} else {
+	// 			totalNormals++;
+	// 		}
+
+	// 		toke = tlp.getTokenizerFactory().getTokenizer(new StringReader(gottenSentence.sent));
+	// 		sent = toke.tokenize();
+	// 		// System.err.println(sent.toString());
+	// 		StringBuilder sb = new StringBuilder();
+	// 		sb.append(i);
+	// 		sb.append(" - sentence size: ");
+	// 		sb.append(sent.size());
+	// 		sb.append(" - ");
+	// 		sb.append(gottenSentence.getSentenceString());
+	// 		System.err.println(sb);
+	// 		// System.err.println(i + " - sentence size:" + sent.size() + " - "
+	// 		// + gottenSentence.getSentenceString());
+
+	// 		if (sent.size() >= 200)
+	// 			continue;
+
+	// 		lpq.parse(sent);
+	// 		List<ScoredObject<Tree>> kbest = lpq.getKBestPCFGParses(numOfParses);
+	// 		gottenSentence.setKBest(kbest);
+	// 		gottenSentence.numParses = numOfParses;
+	// 		String str = "";
+
+	// 		int kBestNum = 0;
+
+	// 		// OutputWriter.write("SENTENCE - " +
+	// 		// gottenSentence.getSentenceString());
+	// 		// OutputWriter.write(gottenSentence.kBest.get(0).object());
+	// 		for (ScoredObject<Tree> tree : gottenSentence.kBest) {
+
+	// 			if (typeOfParse == 1) { // parsetype = 1, do Soft Command analysis
+	// 				if (gottenSentence.softCommand == false) {
+	// 					if (findSoftCommands(tree.object(), gottenSentence, sentenceBefore)) {
+	// 						gottenSentence.softCommand = true;
+	// 						gottenSentence.detectedKBest = kBestNum;
+	// 					}
+	// 				}
+	// 			}
+	// 			if (typeOfParse == 2) { // parsetype = 2, do Direct Command
+	// 									// analysis
+	// 				if (findHardCommands(tree.object(), gottenSentence, sentenceBefore)) {
+	// 					gottenSentence.hardCommand = true;
+	// 					gottenSentence.detectedKBest = kBestNum;
+	// 				}
+	// 			}
+	// 			if (typeOfParse == 0) { // parsetype = 0, do Question analysis
+	// 				str = tree.toString();
+	// 				String tag = tagCheck(str, gottenSentence);
+	// 				if (!tag.equals("none , ")) {
+	// 					if (gottenSentence.detectedKBest == -1) {
+	// 						gottenSentence.detectedKBest = kBestNum;
+	// 					}
+	// 				}
+	// 				gottenSentence.tags = gottenSentence.tags + tag;
+
+	// 			}
+	// 			kBestNum++;
+	// 		}
+
+	// 		if (gottenSentence.findResult()) {
+	// 			detectedQs++;
+	// 		} else {
+	// 			detectedNs++;
+	// 		}
+
+	// 		organizeSent(gottenSentence);
+
+	// 		AnaphoraParser ap = new AnaphoraParser(gottenSentence, sentenceBefore);
+	// 		sentenceBefore = gottenSentence;
+	// 	}
+
+	// }
 }

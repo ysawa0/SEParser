@@ -7,18 +7,23 @@ import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 
 public class Main {
 	private static ArrayList<String> overallResults = new ArrayList<String>();
-	private static String topicBlacklistFileName = "topic_blacklist.txt"; 
+	private static String topicBlacklistFileName; 
 	private static LexicalizedParser lp;
 	
 	// Main method 
 	// input - the input text file. Each sentence should be on its own line and end with a period
 	// lp - the Parser Model
 	public static void main(String[] args) {
-		String dir = System.getProperty("user.dir") + "/englishPCFG.ser.gz";
-		// String dir = System.getProperty("user.dir") + "/SEParser/englishPCFG.ser.gz";
+		String dir = System.getProperty("user.dir");
+		if (dir.contains("/py-SEParser/SEParser")) {
+			topicBlacklistFileName = dir + "/topic_blacklist.txt";
+			dir = dir + "/englishPCFG.ser.gz";
+		} else {
+			topicBlacklistFileName = dir + "/SEParser/topic_blacklist.txt";
+			dir = dir + "/SEParser/englishPCFG.ser.gz";
+		}
 		// System.out.println("dir:   " + dir);
 
-		// lp = LexicalizedParser.loadModel("/Users/ysawa/b/academic/SEParser/englishPCFG.ser.gz");
 		lp = LexicalizedParser.loadModel(dir);
 		String input = args[0]; // Read sentence from args
 		int numParses = 3;
@@ -35,11 +40,6 @@ public class Main {
 		String input = "input.txt"; // Example input for DEFCON presentation
 		lp = LexicalizedParser.loadModel("/Users/ysawa/b/academic/SEParser/englishPCFG.ser.gz");
 
-		// String supcourt = "supcourt_splitbyperiod.txt";
-		// String superrors = "supcourt-errors.txt";
-//		questionParse(input, 6);
-//		softCommandParse(input, 3);
-//		hardCommandParse(input, 3);
 		int numOfParses = 3;
 
 		OutputWriter.writeOverallResults("\n# of parses used: " + numOfParses);
@@ -57,7 +57,6 @@ public class Main {
 		OutputWriter.writeOverallResults("Total execution time: " + Double.toString(totalTime) + " seconds");
 
 		OutputWriter.printAll();
-//		overallResults.forEach(System.out::println);
 	}
 	
 	// Analyzes the input for questions and see if any of them are malicious

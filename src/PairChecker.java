@@ -7,6 +7,8 @@ import java.io.StringReader;
 // Checks Verb Noun Pairs against the topic blacklist
 // sets sent.isMalicious = true when it is detected as malicious
 
+// TODO: Change txt file format to json
+//       Allow multi word nouns like "Internet Explorer"
 public class PairChecker {
 
 	private Sentence sent;
@@ -19,8 +21,9 @@ public class PairChecker {
 		// blacklist.add(new VerbNounPair("download"));
 		// blacklist.get(blacklist.size()-1).addNoun("file");
 		// //blacklist.get(blacklist.size()-1).addNoun("it");
-		
-		// blacklist.add(new VerbNounPair("open"));
+		VerbNounPair p = new VerbNounPair("open"); 
+		p.addNoun("internet, explorer");
+		blacklist.add(p);
 		// //blacklist.get(blacklist.size()-1).addNoun("that");
 		// blacklist.get(blacklist.size()-1).addNoun("Internet, Explorer");
 		
@@ -73,28 +76,22 @@ public class PairChecker {
 	public void blacklistCheck2() {
 		doAnaphoraDetection();
 		for (VerbNounPair sentPair : sent.vnpairs) {
-			
 			for (VerbNounPair blackwordsPair : blacklist )
 			{
 				// Find a blacklist verb
 				if (sentPair.verb.contains(blackwordsPair.verb)) {
 					OutputWriter.write("Blacklist Verb found: " + sentPair.verb);
-					
 					for (String noun : sentPair.nouns) {
-						
 						for (String blacknoun : blackwordsPair.nouns) {
-							
-							if (noun.contains(blacknoun)) {
+							if (noun.toLowerCase().contains(blacknoun)) {
 								OutputWriter.write("Blacklist Noun found: " + blacknoun);
 								OutputWriter.write("------ Sentence is MALICIOUS ------\n");
 								sent.setIsMalicious(true);
 							}
 						}
-						
 					}
 				}
 			}
-			
 		}
 	}
 
@@ -102,14 +99,13 @@ public class PairChecker {
 	// Format should be: 
 	// Verb Noun Noun Noun ...
 	// ie: give social address password 
+	// Verb and nouns should be all lowercased
 	private ArrayList<VerbNounPair> readTopicBlacklistFile(String myFileName) {
-		int n = 1;
 		ArrayList<VerbNounPair> blacklist = new ArrayList<VerbNounPair>();
 		try (BufferedReader br = new BufferedReader(new FileReader(myFileName))) {
 			String line = br.readLine();
 			while (line != null) {
 				if (!line.equals("")) {
-					n++;
 					String[] lineSplit = line.split("\\s");
 					VerbNounPair pair = new VerbNounPair(lineSplit[0]);
 					for (int i=1; i<lineSplit.length; i++) {

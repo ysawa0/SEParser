@@ -103,3 +103,4 @@ stanford-parser.jar
 data/*
 .idea
 scratch.txt
+src/Tests.java

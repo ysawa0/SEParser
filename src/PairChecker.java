@@ -1,6 +1,8 @@
-
-
 import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
 
 // Checks Verb Noun Pairs against the topic blacklist
 // sets sent.isMalicious = true when it is detected as malicious
@@ -9,33 +11,35 @@ public class PairChecker {
 
 	private Sentence sent;
 	private ArrayList<VerbNounPair> blacklist;
-	public PairChecker() {
+	public PairChecker(String myFileName) {
 		blacklist = new ArrayList<VerbNounPair>();
+		// Populate topic blacklist by reading myFileName
+		blacklist.addAll(readTopicBlacklistFile(myFileName));
+
+		// blacklist.add(new VerbNounPair("download"));
+		// blacklist.get(blacklist.size()-1).addNoun("file");
+		// //blacklist.get(blacklist.size()-1).addNoun("it");
 		
-		blacklist.add(new VerbNounPair("download"));
-		blacklist.get(blacklist.size()-1).addNoun("file");
-		//blacklist.get(blacklist.size()-1).addNoun("it");
+		// blacklist.add(new VerbNounPair("open"));
+		// //blacklist.get(blacklist.size()-1).addNoun("that");
+		// blacklist.get(blacklist.size()-1).addNoun("Internet, Explorer");
 		
-		blacklist.add(new VerbNounPair("open"));
-		//blacklist.get(blacklist.size()-1).addNoun("that");
-		blacklist.get(blacklist.size()-1).addNoun("Internet, Explorer");
+		// blacklist.add(new VerbNounPair("update"));
+		// blacklist.get(blacklist.size()-1).addNoun("records");
 		
-		blacklist.add(new VerbNounPair("update"));
-		blacklist.get(blacklist.size()-1).addNoun("records");
+		// blacklist.add(new VerbNounPair("give"));
+		// blacklist.get(blacklist.size()-1).addNoun("social");
+		// blacklist.get(blacklist.size()-1).addNoun("address");
 		
-		blacklist.add(new VerbNounPair("give"));
-		blacklist.get(blacklist.size()-1).addNoun("social");
-		blacklist.get(blacklist.size()-1).addNoun("address");
-		
-		blacklist.add(new VerbNounPair("email"));
-		blacklist.get(blacklist.size()-1).addNoun("cert");
+		// blacklist.add(new VerbNounPair("email"));
+		// blacklist.get(blacklist.size()-1).addNoun("cert");
 		
 
-		blacklist.add(new VerbNounPair("send"));
-		blacklist.get(blacklist.size()-1).addNoun("certificate");
+		// blacklist.add(new VerbNounPair("send"));
+		// blacklist.get(blacklist.size()-1).addNoun("certificate");
 		
-		blacklist.add(new VerbNounPair("turn"));
-		blacklist.get(blacklist.size()-1).addNoun("firewall");
+		// blacklist.add(new VerbNounPair("turn"));
+		// blacklist.get(blacklist.size()-1).addNoun("firewall");
 	}
 
 	public void setSentence(Sentence s) {
@@ -92,5 +96,33 @@ public class PairChecker {
 			}
 			
 		}
+	}
+
+	// Read topic blacklist from txt file.
+	// Format should be: 
+	// Verb Noun Noun Noun ...
+	// ie: give social address password 
+	private ArrayList<VerbNounPair> readTopicBlacklistFile(String myFileName) {
+		int n = 1;
+		ArrayList<VerbNounPair> blacklist = new ArrayList<VerbNounPair>();
+		try (BufferedReader br = new BufferedReader(new FileReader(myFileName))) {
+			String line = br.readLine();
+			while (line != null) {
+				if (!line.equals("")) {
+					n++;
+					String[] lineSplit = line.split("\\s");
+					VerbNounPair pair = new VerbNounPair(lineSplit[0]);
+					for (int i=1; i<lineSplit.length; i++) {
+						pair.addNoun(lineSplit[i]);
+					}
+					blacklist.add(pair);
+				}
+				line = br.readLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new ArrayList<VerbNounPair>();
+		}
+		return blacklist;
 	}
 }

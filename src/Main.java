@@ -7,7 +7,7 @@ import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 
 public class Main {
 	private static ArrayList<String> overallResults = new ArrayList<String>();
-	
+	private static String topicBlacklistFileName = "topic_blacklist.txt"; 
 	private static LexicalizedParser lp;
 	
 	// Main method 
@@ -66,7 +66,7 @@ public class Main {
 		TParser tp;
 		OutputWriter.write("\n---Question parse start--- " + numParses + " parses \n");
 		OutputWriter.write("Questions detected: " + qp.qList.size());
-		PairChecker pairCheck = new PairChecker();
+		PairChecker pairCheck = new PairChecker(topicBlacklistFileName);
 
 		for(Sentence s :qp.detectedList) {
 			tp = new TParser(s);
@@ -75,7 +75,7 @@ public class Main {
 			pairCheck.setSentence(s);
 			pairCheck.blacklistCheck2();
 		}
-		
+
 		int numMalicious = 0;
 		for (Sentence sent : qp.sentList) {
 			if (sent.isMalicious()) numMalicious++;
@@ -91,7 +91,7 @@ public class Main {
 
 		QParser qp = new QParser(filename,lp, numParses, 1, sentList);
 		OutputWriter.write("Soft commands detected: " + qp.softList.size());
-		PairChecker pairCheck = new PairChecker();
+		PairChecker pairCheck = new PairChecker(topicBlacklistFileName);
 
 		for(Sentence s : qp.softList) {
 			TParser tp = new TParser(s);
@@ -116,7 +116,7 @@ public class Main {
 
 		QParser qp = new QParser(filename,lp, numParses,2, sentList);
 		OutputWriter.write("Direct commands detected: " + qp.hardList.size());
-		PairChecker pairCheck = new PairChecker();
+		PairChecker pairCheck = new PairChecker(topicBlacklistFileName);
 
 		for(Sentence s : qp.hardList) {
 			TParser tp = new TParser(s);

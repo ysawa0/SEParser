@@ -9,8 +9,7 @@ public class PairChecker {
 
 	private Sentence sent;
 	private ArrayList<VerbNounPair> blacklist;
-	public PairChecker(Sentence s) {
-		sent = s;
+	public PairChecker() {
 		blacklist = new ArrayList<VerbNounPair>();
 		
 		blacklist.add(new VerbNounPair("download"));
@@ -38,7 +37,11 @@ public class PairChecker {
 		blacklist.add(new VerbNounPair("turn"));
 		blacklist.get(blacklist.size()-1).addNoun("firewall");
 	}
-	
+
+	public void setSentence(Sentence s) {
+		this.sent = s;
+	}
+
 	// Detect "that" or "it" and when found, replace them with the previous noun
 	// Find any Anaphora Resolution and replace the "that" or "it"
 	public void doAnaphoraDetection() {

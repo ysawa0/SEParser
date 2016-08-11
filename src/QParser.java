@@ -69,12 +69,12 @@ public class QParser {
 			parseSentencesNew();
 		calculate();
 	}
+
 	private void parseSentencesNew() {
 		Sentence sentenceBefore = null;
 		for (int i = 0; i < sentList.size(); i++) {
 			
 			Sentence gottenSentence = sentList.get(i);
-			
 			if (gottenSentence.isQuestion == true) {
 				totalQuestions++;
 			} else {
@@ -111,7 +111,6 @@ public class QParser {
 						}
 					}
 					gottenSentence.tags = gottenSentence.tags + tag;
-
 				}
 				kBestNum++;
 			}
@@ -123,7 +122,6 @@ public class QParser {
 			}
 
 			organizeSent(gottenSentence);
-
 			AnaphoraParser ap = new AnaphoraParser(gottenSentence, sentenceBefore);
 			sentenceBefore = gottenSentence;
 		}
@@ -336,7 +334,7 @@ public class QParser {
 			s.detectionCount++;
 		}
 
-		s.detectAsQ = false;
+		// s.detectAsQ = false;
 		returnString = returnString + ", ";
 
 		return returnString;

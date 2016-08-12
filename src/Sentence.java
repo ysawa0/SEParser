@@ -1,5 +1,3 @@
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +13,12 @@ public class Sentence {
 	public boolean isQuestion = false;
 	public boolean isSoftCommand = false;
 	private boolean isDirectCommand = false;
-	private boolean isMalicious = false;
+	protected boolean isMalicious = false;
 	public List<ScoredObject<Tree>> kBest;
 	
-	private ArrayList<Tree> kBestTrees;
+	protected ArrayList<Tree> kBestTrees;
 	
 	public boolean detectAsQ = false;
-	public boolean detectAsSoft = false;
 
 	public String tags = "";
 	public int detectionCount = 0;
@@ -49,16 +46,14 @@ public class Sentence {
         if(s.contains("?"))
         {
             isQuestion = true;
-        }
-        else
+        } else
         {
         	isQuestion = false;
         }
         if(s.contains("!"))
         {
         	isSoftCommand = true;
-        }
-        else
+        } else
         {
         	isSoftCommand = false;
         }

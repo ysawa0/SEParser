@@ -1,6 +1,6 @@
 
 
-
+import javax.json.Json;
 import java.util.ArrayList;
 
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
@@ -29,10 +29,28 @@ public class Main {
 		int numParses = 3;
 		ArrayList<Sentence> sentList = ParseTreeMaker.makeOneParseTree(input, lp, numParses);
 		OutputWriter.write(sentList.get(0).getkBestTrees().get(0));
-		questionParse(input, numParses, sentList);
-		softCommandParse(input, numParses, sentList);
-		hardCommandParse(input, numParses, sentList);
+		getJSONResult(input, numParses, sentList);
+		// questionParse(input, numParses, sentList);
+		// softCommandParse(input, numParses, sentList);
+		// hardCommandParse(input, numParses, sentList);
 		OutputWriter.printAll();
+	}
+
+	public static void getJSONResult(String sentence, int numParses, ArrayList<Sentence> sentList) {
+		questionParse(sentence, numParses, sentList).get(0);
+		softCommandParse(sentence, numParses, sentList).get(0);
+		hardCommandParse(sentence, numParses, sentList).get(0);
+
+		Sentence sentObj = sentList.get(0);
+
+		ArrayList<VerbNounPair> vnpairs = new ArrayList<VerbNounPair>();
+		if (sentList.get(0).isMalicious) vnpairs.addAll(sentObj.vnpairs);
+		ResultSentence rs = new ResultSentence(sentObj.sent, sentObj.kBestTrees, numParses, vnpairs);
+		if (sentObj.detectAsQ) rs.question = true;
+		if (sentObj.softCommand) rs.softCommand = true;
+		if (sentObj.hardCommand) rs.hardCommand = true;
+		if (sentObj.isMalicious) rs.malicious = true;
+		System.out.println(rs.makeJson());
 	}
 
 	public static void oldmain(String[] args) {
@@ -49,8 +67,6 @@ public class Main {
 		softCommandParse(input, 1, sentList);
 		hardCommandParse(input, 1, sentList);
 
-
-
 		long endTime = System.currentTimeMillis();
 		double totalTime = endTime - startTime;
 		totalTime = totalTime/1000.;
@@ -60,7 +76,7 @@ public class Main {
 	}
 	
 	// Analyzes the input for questions and see if any of them are malicious
-	public static void questionParse(String filename, int numParses, ArrayList<Sentence> sentList) {
+	public static ArrayList<Sentence> questionParse(String filename, int numParses, ArrayList<Sentence> sentList) {
 		QParser qp = new QParser(filename,lp, numParses, 0, sentList);
 		TParser tp;
 		OutputWriter.write("\n---Question parse start--- " + numParses + " parses \n");
@@ -82,10 +98,11 @@ public class Main {
 
 		OutputWriter.writeOverallResults("# questions: " + qp.qList.size());
 		OutputWriter.writeOverallResults("# of malicious questions: " + numMalicious);
+		return qp.sentList;
 	}
 
 	// Analyzes the input for Soft Commands and see if any of them are malicious
-	public static void softCommandParse(String filename, int numParses, ArrayList<Sentence> sentList) {
+	public static ArrayList<Sentence> softCommandParse(String filename, int numParses, ArrayList<Sentence> sentList) {
 		OutputWriter.write("\n---Soft Commands parse start--- " + numParses + " parses \n");
 
 		QParser qp = new QParser(filename,lp, numParses, 1, sentList);
@@ -107,10 +124,11 @@ public class Main {
 
 		OutputWriter.writeOverallResults("# soft commands: " + qp.softList.size());
 		OutputWriter.writeOverallResults("# of malicious soft commands: " + numMalicious);
+		return qp.sentList;
 	}
 
 	// Analyzes the input for Hard Commands and see if any of them are malicious
-	public static void hardCommandParse(String filename, int numParses, ArrayList<Sentence> sentList) {
+	public static ArrayList<Sentence> hardCommandParse(String filename, int numParses, ArrayList<Sentence> sentList) {
 		OutputWriter.write("\n---Direct Commands parse start--- " + numParses + " parses \n");
 
 		QParser qp = new QParser(filename,lp, numParses,2, sentList);
@@ -133,6 +151,7 @@ public class Main {
 
 		OutputWriter.writeOverallResults("# direct commands: " + qp.hardList.size());
 		OutputWriter.writeOverallResults("# of malicious direct commands: " + numMalicious);
+		return qp.sentList;
 	}
 
 	public static void printSentences(Sentence s) {

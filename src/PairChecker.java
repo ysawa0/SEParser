@@ -108,9 +108,7 @@ public class PairChecker {
 				if (!line.equals("")) {
 					String[] lineSplit = line.split("\\s");
 					VerbNounPair pair = new VerbNounPair(lineSplit[0]);
-					for (int i=1; i<lineSplit.length; i++) {
-						pair.addNoun(lineSplit[i]);
-					}
+					pair.addNoun(lineSplit[1]);
 					blacklist.add(pair);
 				}
 				line = br.readLine();

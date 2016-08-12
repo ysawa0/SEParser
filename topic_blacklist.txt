@@ -1,6 +1,8 @@
 download file
 update records
-give social address
+give social
+give address
 email cert
-send certificate file
+send certificate
+send file
 turn firewall

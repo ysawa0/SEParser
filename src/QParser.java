@@ -35,8 +35,7 @@ public class QParser {
 	public double precision;
 	public double recall;
 
-	public ArrayList<Sentence> detectedList; // holds all detected questions and
-												// commands
+	public ArrayList<Sentence> detectedList; // holds all detected questions and commands
 	public ArrayList<Sentence> qList;
 	public ArrayList<Sentence> fpList;
 	public ArrayList<Sentence> fnList;
@@ -69,7 +68,16 @@ public class QParser {
 			parseSentencesNew();
 		calculate();
 	}
-
+	
+	private void parseOneSentence(Sentence sent) {
+		for (Tree tree : sent.kBestTrees) {
+			if (findSoftCommands(tree, sent)) {
+				// sent.softCommand = true;
+				// sent.detectedKBest = kBestNum;
+			}
+		}
+	}
+	
 	private void parseSentencesNew() {
 		Sentence sentenceBefore = null;
 		for (int i = 0; i < sentList.size(); i++) {
@@ -86,18 +94,16 @@ public class QParser {
 			}	
 			int kBestNum = 0;
 			for (Tree tree : gottenSentence.getkBestTrees()) {
-
 				if (typeOfParse == 1) { // parsetype = 1, do Soft Command analysis
 					if (gottenSentence.softCommand == false) {
-						if (findSoftCommands(tree, gottenSentence, sentenceBefore)) {
+						if (findSoftCommands(tree, gottenSentence)) {
 							gottenSentence.softCommand = true;
 							gottenSentence.detectedKBest = kBestNum;
 						}
 					}
 				}
-				if (typeOfParse == 2) { // parsetype = 2, do Direct Command
-										// analysis
-					if (findHardCommands(tree, gottenSentence, sentenceBefore)) {
+				if (typeOfParse == 2) { // parsetype = 2, do Direct Command analysis
+					if (findHardCommands(tree, gottenSentence)) {
 						gottenSentence.hardCommand = true;
 						gottenSentence.detectedKBest = kBestNum;
 					}
@@ -109,6 +115,9 @@ public class QParser {
 						if (gottenSentence.detectedKBest == -1) {
 							gottenSentence.detectedKBest = kBestNum;
 						}
+					}
+					if(findQuestion(tree)) {
+						gottenSentence.detectAsQ = true;
 					}
 					gottenSentence.tags = gottenSentence.tags + tag;
 				}
@@ -136,7 +145,22 @@ public class QParser {
 		recall = ((double) truePositive) / (truePositive + falseNegatives);
 	}
 
-	private boolean findSoftCommands(Tree t, Sentence sent, Sentence sentBefore) {
+	//Finds first SBARQ or SQ or SINV tree
+	private boolean findQuestion(Tree t) {
+		if (t.value().equals("SBARQ") || t.value().equals("SQ") || t.value().equals("SINV")) {
+			return true;
+		}
+		
+		Tree[] tarray = t.children();
+		for (int i=0; i<tarray.length; i++) {
+			if (findQuestion(tarray[i]) == true) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean findSoftCommands(Tree t, Sentence sent) {
 
 		// Exception for this sentence since the first 2 parses are incorrect.
 		// 3rd parse is best one.
@@ -187,7 +211,7 @@ public class QParser {
 		return false;
 	}
 
-	private boolean findHardCommands(Tree t, Sentence sent, Sentence sentBefore) {
+	private boolean findHardCommands(Tree t, Sentence sent) {
 		if (!sent.hardNoun.equals("")) {
 			return true;
 		}
@@ -310,7 +334,6 @@ public class QParser {
 				s.detectAsQ = true;
 				detectedTag = true;
 			}
-
 		}
 		if (str.matches(".*?\\bWHPP\\b.*?")) {
 			returnString = returnString + "WHPP ";
@@ -336,7 +359,6 @@ public class QParser {
 
 		// s.detectAsQ = false;
 		returnString = returnString + ", ";
-
 		return returnString;
 	}
 
@@ -363,99 +385,4 @@ public class QParser {
 			e.printStackTrace();
 		}
 	}
-	// TODO: Should be OKAY to delete below
-	// private void parseSentences(LexicalizedParser lp) {
-	// 	lpq = lp.lexicalizedParserQuery();
-	// 	TreebankLanguagePack tlp = new PennTreebankLanguagePack();
-	// 	List<? extends HasWord> sent;
-	// 	Tokenizer<? extends HasWord> toke;
-	// 	Sentence gottenSentence;
-	// 	Sentence sentenceBefore = null;
-
-	// 	System.err.println("sLize.size() - " + sentList.size());
-	// 	for (int i = 0; i < 5; i++) {
-
-	// 		gottenSentence = sentList.get(i);
-
-	// 		if (i == 0) {
-	// 			sentenceBefore = gottenSentence;
-	// 		}
-
-	// 		if (gottenSentence.isQuestion == true) {
-	// 			totalQuestions++;
-	// 		} else {
-	// 			totalNormals++;
-	// 		}
-
-	// 		toke = tlp.getTokenizerFactory().getTokenizer(new StringReader(gottenSentence.sent));
-	// 		sent = toke.tokenize();
-	// 		// System.err.println(sent.toString());
-	// 		StringBuilder sb = new StringBuilder();
-	// 		sb.append(i);
-	// 		sb.append(" - sentence size: ");
-	// 		sb.append(sent.size());
-	// 		sb.append(" - ");
-	// 		sb.append(gottenSentence.getSentenceString());
-	// 		System.err.println(sb);
-	// 		// System.err.println(i + " - sentence size:" + sent.size() + " - "
-	// 		// + gottenSentence.getSentenceString());
-
-	// 		if (sent.size() >= 200)
-	// 			continue;
-
-	// 		lpq.parse(sent);
-	// 		List<ScoredObject<Tree>> kbest = lpq.getKBestPCFGParses(numOfParses);
-	// 		gottenSentence.setKBest(kbest);
-	// 		gottenSentence.numParses = numOfParses;
-	// 		String str = "";
-
-	// 		int kBestNum = 0;
-
-	// 		// OutputWriter.write("SENTENCE - " +
-	// 		// gottenSentence.getSentenceString());
-	// 		// OutputWriter.write(gottenSentence.kBest.get(0).object());
-	// 		for (ScoredObject<Tree> tree : gottenSentence.kBest) {
-
-	// 			if (typeOfParse == 1) { // parsetype = 1, do Soft Command analysis
-	// 				if (gottenSentence.softCommand == false) {
-	// 					if (findSoftCommands(tree.object(), gottenSentence, sentenceBefore)) {
-	// 						gottenSentence.softCommand = true;
-	// 						gottenSentence.detectedKBest = kBestNum;
-	// 					}
-	// 				}
-	// 			}
-	// 			if (typeOfParse == 2) { // parsetype = 2, do Direct Command
-	// 									// analysis
-	// 				if (findHardCommands(tree.object(), gottenSentence, sentenceBefore)) {
-	// 					gottenSentence.hardCommand = true;
-	// 					gottenSentence.detectedKBest = kBestNum;
-	// 				}
-	// 			}
-	// 			if (typeOfParse == 0) { // parsetype = 0, do Question analysis
-	// 				str = tree.toString();
-	// 				String tag = tagCheck(str, gottenSentence);
-	// 				if (!tag.equals("none , ")) {
-	// 					if (gottenSentence.detectedKBest == -1) {
-	// 						gottenSentence.detectedKBest = kBestNum;
-	// 					}
-	// 				}
-	// 				gottenSentence.tags = gottenSentence.tags + tag;
-
-	// 			}
-	// 			kBestNum++;
-	// 		}
-
-	// 		if (gottenSentence.findResult()) {
-	// 			detectedQs++;
-	// 		} else {
-	// 			detectedNs++;
-	// 		}
-
-	// 		organizeSent(gottenSentence);
-
-	// 		AnaphoraParser ap = new AnaphoraParser(gottenSentence, sentenceBefore);
-	// 		sentenceBefore = gottenSentence;
-	// 	}
-
-	// }
 }

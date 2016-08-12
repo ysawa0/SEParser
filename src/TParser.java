@@ -1,7 +1,4 @@
-
-
 import java.util.ArrayList;
-
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.tregex.TregexMatcher;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
@@ -11,7 +8,6 @@ import edu.stanford.nlp.trees.tregex.TregexPattern;
 public class TParser {
 
 private Tree whtree;
-
 private ArrayList<Tree> sqList;
 private ArrayList<String> nounList;
 private ArrayList<String> verbList;
@@ -43,9 +39,8 @@ private ArrayList<Tree> nounTreeList;
 				tree = sent.kBest.get(3).object().skipRoot();
 			}
 		}
-		
-		
 	}
+
 	public void CommandParse() {
 			nounList = new ArrayList<String>();
 			verbList = new ArrayList<String>();
@@ -55,19 +50,17 @@ private ArrayList<Tree> nounTreeList;
 //			OutputWriter.write(sent.sent);
 //			OutputWriter.write(tree);
 			findVerbTregex(tree);
-			
 			findNounTregex(tree);
-			
 			verbNounPairFinder(tree);
 			//OutputWriter.write("----------------------");
-		
 	}
+
 	public void SQParse() {
-		
 		//Ignore this since it's not a question. A false positive.
 		if(sent.sent.equals("Now here is where we are starting to have some problems with our data field.")) {
 			return;
 		}
+
 		nounList = new ArrayList<String>();
 		verbList = new ArrayList<String>();
 		nounTreeList = new ArrayList<Tree>();
@@ -75,11 +68,10 @@ private ArrayList<Tree> nounTreeList;
 		verbList2 = new ArrayList<String>();
 		whList = new ArrayList<String>();
 		sqList = new ArrayList<Tree>();
-		findSQ(tree);
-		
+		findSQ(tree, sqList);
 		if (sqList.size() > 0) {
+			sent.detectAsQ = true;
 			//Search for noun/verbs for each S tag found.
-			
 			for (Tree t : sqList) {
 				nounList = new ArrayList<String>();
 				verbList = new ArrayList<String>();
@@ -88,22 +80,15 @@ private ArrayList<Tree> nounTreeList;
 				verbTreeList = new ArrayList<Tree>();
 				
 				//OutputWriter.write(t);
-				
 				findVerbTregex(t);
-				
 				findNounTregex(t);
-				
 				verbNounPairFinder(t);
-				//OutputWriter.write("----------------------");
 			}
-
 		}
 		else {
 			WHParse();
-			
 		}
 	}
-	
 	
 	private static boolean doesTreeMatchPattern(Tree tree, String pattern) {
 		TregexPattern patternMW = TregexPattern.compile(pattern);
@@ -120,14 +105,11 @@ private ArrayList<Tree> nounTreeList;
 		findWh(tree);
 		if (whList.size() == 1) {
 			Tree whancestor = getAncestor(whtree);
-
 			findVerbTregex(whancestor);
 			findNounTregex(whancestor);
-
 			verbNounPairFinder(whancestor);
 		}
 	}
-	
 
 	private void verbNounPairFinder(Tree theTree) {
 		Tree firstVerb;
@@ -169,8 +151,6 @@ private ArrayList<Tree> nounTreeList;
 					sent.addNoun(t.yield().toString());
 				}
 			}
-			//OutputWriter.write();
-			
 		}
 	}
 	
@@ -182,7 +162,6 @@ private ArrayList<Tree> nounTreeList;
 		while (matcher.findNextMatchingNode()) {
 			match = matcher.getMatch(); 
 			verbTreeList.add(match);
-
 			verbList2.add(match.yield().toString());
 		}
 	}
@@ -195,7 +174,6 @@ private ArrayList<Tree> nounTreeList;
 		while (matcher.findNextMatchingNode()) {
 			match = matcher.getMatch(); 
 			nounTreeList.add(match);
-
 			nounList.add(match.yield().toString());
 		}
 	}
@@ -221,26 +199,22 @@ private ArrayList<Tree> nounTreeList;
 		}
 		
 		Tree[] tarray = t.children();
-		
 		for (int i=0; i<tarray.length; i++) {
 				findWh(tarray[i]);
 		}
 	}
 	
-	private void findSQ(Tree t) {
+	private void findSQ(Tree t, ArrayList<Tree> detectedQuestions) {
 		//Finds first SBARQ or SQ or SINV tree
 
 		if (t.value().equals("SBARQ") || t.value().equals("SQ") || t.value().equals("SINV")) {
-			sqList.add(t);
+			detectedQuestions.add(t);
+			// System.out.println("Found SQ - " + t);
 		}
 		
 		Tree[] tarray = t.children();
-		
 		for (int i=0; i<tarray.length; i++) {
-			findSQ(tarray[i]);
+			findSQ(tarray[i], detectedQuestions);
 		}
 	}
-	
-
-	
 }

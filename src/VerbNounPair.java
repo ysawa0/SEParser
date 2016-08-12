@@ -21,5 +21,12 @@ public class VerbNounPair {
 	public void addNoun(String n) {
 		nouns.add(n.toLowerCase());
 	}
-	
+
+	public String nounToString() {
+		String str = "";
+		for (String s : nouns) {
+			str += s + ' ';
+		}
+		return str;
+	}
 }

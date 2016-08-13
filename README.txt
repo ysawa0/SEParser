@@ -1,6 +1,6 @@
 SEParser -- Social Engineering Parser using Natural Language Processing
 
-Talk to it online! 
+Check it out online! 
 http://separser.play.ai/
 
 Stanford Parser website:

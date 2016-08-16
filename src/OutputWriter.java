@@ -1,3 +1,5 @@
+package net.greenclay.SEParser;
+
 import java.util.ArrayList;
 
 import edu.stanford.nlp.trees.Tree;

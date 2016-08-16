@@ -1,3 +1,5 @@
+package net.greenclay.SEParser;
+
 import java.util.ArrayList;
 import java.util.List;
 

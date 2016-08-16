@@ -1,4 +1,4 @@
-
+package net.greenclay.SEParser;
 
 import javax.json.Json;
 import java.util.ArrayList;

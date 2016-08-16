@@ -1,3 +1,4 @@
+package net.greenclay.SEParser;
 
 //import java.util.Arrays;
 import java.io.BufferedReader;
@@ -109,17 +110,17 @@ public class QParser {
 					}
 				}
 				if (typeOfParse == 0) { // parsetype = 0, do Question analysis
-					String str = tree.toString();
-					String tag = tagCheck(str, gottenSentence);
-					if (!tag.equals("none , ")) {
-						if (gottenSentence.detectedKBest == -1) {
-							gottenSentence.detectedKBest = kBestNum;
-						}
-					}
+					// String str = tree.toString();
+					// String tag = tagCheck(str, gottenSentence);
+					// if (!tag.equals("none , ")) {
+					// 	if (gottenSentence.detectedKBest == -1) {
+					// 		gottenSentence.detectedKBest = kBestNum;
+					// 	}
+					// }
 					if(findQuestion(tree)) {
 						gottenSentence.detectAsQ = true;
 					}
-					gottenSentence.tags = gottenSentence.tags + tag;
+					// gottenSentence.tags = gottenSentence.tags + tag;
 				}
 				kBestNum++;
 			}
@@ -147,12 +148,24 @@ public class QParser {
 
 	//Finds first SBARQ or SQ or SINV tree
 	private boolean findQuestion(Tree t) {
+		// TParser tp = new TParser(sent);
+		// tp.CommandParse();
+		TregexPattern patternMW = TregexPattern.compile("SBARQ | SQ | SINV");
+		TregexMatcher matcher = patternMW.matcher(t);
+		if (matcher.findNextMatchingNode()) {
+			return true;
+		}
+		return false;
+	}
+
+	//Finds first SBARQ or SQ or SINV tree
+	private boolean findQuestionOld(Tree t) {
 		if (t.value().equals("SBARQ") || t.value().equals("SQ") || t.value().equals("SINV")) {
 			return true;
 		}
 		
 		Tree[] tarray = t.children();
-		for (int i=0; i<tarray.length; i++) {
+		for (int i=0; i < tarray.length; i++) {
 			if (findQuestion(tarray[i]) == true) {
 				return true;
 			}

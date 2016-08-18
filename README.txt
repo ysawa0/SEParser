@@ -1,7 +1,9 @@
 SEParser -- Social Engineering Parser using Natural Language Processing
 
 Check it out online! 
-http://separser.play.ai/
+http://separser.greenclay.net/
+
+
 
 Stanford Parser website:
 http://nlp.stanford.edu/software/lex-parser.shtml#Download

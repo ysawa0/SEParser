@@ -126,13 +126,14 @@ private ArrayList<Tree> nounTreeList;
 				firstVerbNum = firstVerb.nodeNumber(theTree);
 				
 				//OutputWriter.write("VERB: " + firstVerb.yield());
-				
-				sent.newPair(firstVerb.yield().toString());
+//				sent.newPair(firstVerb.yield().toString());
 				for (Tree t : nounTreeList) {
 					nounNum = t.nodeNumber(theTree);
-					if ( firstVerbNum < nounNum) {
+					if ( firstVerbNum < nounNum ) {
 						//OutputWriter.write("NOUN: " + t.yield());
-						sent.addNoun(t.yield().toString());
+						String noun = t.yield().toString();
+						sent.newPair(firstVerb.yield().toString(), noun);
+//						sent.addNoun(t.yield().toString());
 					}
 				}
 				break;
@@ -144,13 +145,15 @@ private ArrayList<Tree> nounTreeList;
 			secondVerbNum = secondVerb.nodeNumber(theTree);
 			
 			//OutputWriter.write("VERB: " + firstVerb.yield());
-			sent.newPair(firstVerb.yield().toString());
+//			sent.newPair(firstVerb.yield().toString());
 			
 			for (Tree t : nounTreeList) {
 				nounNum = t.nodeNumber(theTree);
 				if ( firstVerbNum < nounNum && secondVerbNum > nounNum) {
 					//OutputWriter.write("NOUN: " + t.yield());
-					sent.addNoun(t.yield().toString());
+                    String noun = t.yield().toString();
+                    sent.newPair(secondVerb.yield().toString(), noun);
+//					sent.addNoun(t.yield().toString());
 				}
 			}
 		}

@@ -23,15 +23,19 @@ public class TopicBlacklist {
 	private ArrayList<VerbNounPair> blacklist;
 	public TopicBlacklist(String myFileName) {
 		blacklist = new ArrayList<VerbNounPair>();
-		// Populate topic blacklist by reading myFileName
-		blacklist.addAll(readTopicBlacklistFile(myFileName));
 
-		// blacklist.add(new VerbNounPair("download"));
-		// blacklist.get(blacklist.size()-1).addNoun("file");
-		// //blacklist.get(blacklist.size()-1).addNoun("it");
-		VerbNounPair p = new VerbNounPair("open", "");
-		p.setNoun("internet, explorer");
-		blacklist.add(p);
+
+        blacklist.addAll(getTopicBlacklistFromMongo());
+        // Populate topic blacklist by reading myFileName
+        // OLD BLACKLIST THAT READS FROM TEXT FILE BELOW
+//		blacklist.addAll(readTopicBlacklistFile(myFileName));
+//
+//		// blacklist.add(new VerbNounPair("download"));
+//		// blacklist.get(blacklist.size()-1).addNoun("file");
+//		// //blacklist.get(blacklist.size()-1).addNoun("it");
+//		VerbNounPair p = new VerbNounPair("open", "");
+//		p.setNoun("internet, explorer");
+//		blacklist.add(p);
 		// //blacklist.get(blacklist.size()-1).addNoun("that");
 		// blacklist.get(blacklist.size()-1).addNoun("Internet, Explorer");
 		
@@ -53,7 +57,7 @@ public class TopicBlacklist {
 		// blacklist.get(blacklist.size()-1).addNoun("firewall");
 	}
 
-	public static void getTopicBlacklistFromMongo() {
+	public static ArrayList<VerbNounPair> getTopicBlacklistFromMongo() {
 //		String mURI = "mongodb://guest:anteater1@ds145325.mlab.com:45325/separser";
 //		MongoClientURI uri = new MongoClientURI(mURI);
 //		MongoClient cl = new MongoClient(uri);
@@ -62,10 +66,14 @@ public class TopicBlacklist {
 		MongoDatabase db = client.getDatabase("separser");
 		FindIterable<Document> iterable = db.getCollection("blacklist").find();
 
+        ArrayList<VerbNounPair> myblacklist = new ArrayList<VerbNounPair>();
 		for (Document d : iterable) {
 			VerbNounPair pair = new VerbNounPair(d.get("verb").toString(), d.get("noun").toString());
+            myblacklist.add(pair);
 			System.out.println(pair.toString());
 		}
+
+		return myblacklist;
 
 //		iterable.forEach(new Block<Document>() {
 //			@Override
@@ -112,9 +120,9 @@ public class TopicBlacklist {
 			{
 				// Find a blacklist verb
 				if (sentencePair.verb.contains(blacklistPair.verb)) {
-					OutputWriter.write("Verb found on Topic Blacklist: " + sentencePair.verb);
 					if (sentencePair.noun.contains(blacklistPair.noun)) {
-						OutputWriter.write("Noun found on Topic Blacklist: " + blacklistPair.noun);
+                        OutputWriter.write("Verb found on Topic Blacklist: " + sentencePair.verb);
+                        OutputWriter.write("Noun found on Topic Blacklist: " + blacklistPair.noun);
 						OutputWriter.write("---- Sentence is MALICIOUS ------");
 						sent.setIsMalicious(true);
 					}

@@ -13,11 +13,11 @@ public class Main {
 	// input - the input text file. Each sentence should be on its own line and end with a period
 	// lp - the Parser Model
 
-	public static void main(String[] args) {
-		TopicBlacklist.getTopicBlacklistFromMongo();
-	}
+//	public static void main(String[] args) {
+//		TopicBlacklist.getTopicBlacklistFromMongo();
+//	}
 
-	public static void mainx(String[] args) {
+	public static void main(String[] args) {
 		String dir = System.getProperty("user.dir");
 		if (dir.contains("/py-SEParser/SEParser")) {
 			topicBlacklistFileName = dir + "/topic_blacklist.txt";

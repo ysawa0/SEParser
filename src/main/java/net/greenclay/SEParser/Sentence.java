@@ -92,14 +92,15 @@ public class Sentence {
 	}
 	
 	// Requires number of detections for a sentence to be detected
-	public void newPair(String v) {
-		vnpairs.add(new VerbNounPair(v, ""));
+	public void newPair(String verb, String noun) {
+		vnpairs.add(new VerbNounPair(verb, noun));
 	}
-	
-	public void addNoun(String n) {
-		// adds a noun to the last added noun verb pair.
-		vnpairs.get(vnpairs.size()-1).addNoun(n);
-	}
+
+	// unused. can delete later
+//	public void addNoun(String n) {
+//		// adds a noun to the last added noun verb pair.
+//		vnpairs.get(vnpairs.size()-1).addNoun(n);
+//	}
 	
 	public boolean findResult1() {
 		if (detectionCount >= 1) {
@@ -113,8 +114,6 @@ public class Sentence {
 	
 	public boolean findResult()
 	{
-		
-		
 		if(numParses == 1) {
 			if (detectionCount == 1)
 			{

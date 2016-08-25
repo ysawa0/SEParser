@@ -37,25 +37,19 @@ public class ResultSentence {
 	}
 	
 	private String toString(ArrayList<VerbNounPair> vnpairs) {
-		String results = "";
-		for (VerbNounPair vnpair : vnpairs) {
-			String nouns = vnpair.nounToString();
-			// vnpair.nouns.forEach((str) ->  nouns + " " + str);
-			String s = vnpair.verb + " - " + nouns;
-			results += s;
-			// JsonObject model = Json.createObjectBuilder()
-			// .add("verb", vnpair.verb)
-			// .add("nouns", nouns)
-			// .build();
-			// StringWriter stWriter = new StringWriter();
-			// JsonWriter jsonWriter = Json.createWriter(stWriter);
-			// jsonWriter.writeObject(model);
-			// jsonWriter.close();
-
-			// String jsonData = stWriter.toString();
-			// return jsonData;
+		String result = "";
+		for (VerbNounPair pair : vnpairs) {
+			result += pair.toString() + ", ";
 		}
-		return results;
+		return result;
+
+//		String results = "";
+//		for (VerbNounPair vnpair : vnpairs) {
+//			String nouns = vnpair.nounToString();
+//			String s = vnpair.verb + " - " + nouns;
+//			results += s;
+//		}
+//		return results;
 	}
 	public ArrayList<Tree> convertScoredObjectToArrayList(List<ScoredObject<Tree>> kBest) {
 		ArrayList<Tree> list = new ArrayList<Tree>();

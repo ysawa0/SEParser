@@ -11,13 +11,17 @@ import java.util.ArrayList;
 public class VerbNounPair {
 	
 	public String verb;
-	public ArrayList<String> noun;
-	
+//	public ArrayList<String> noun;
+	public String noun;
+
 	public VerbNounPair(String verb, String noun) {
 		this.verb = verb.toLowerCase();
-		this.noun = new ArrayList<String>();
+        this.noun = noun.toLowerCase();
+//		this.noun = new ArrayList<String>();
 	}
-	
+
+	public void setNoun(String noun) { this.noun = noun; }
+
 	public void addNoun(String n) {
 		noun.add(n.toLowerCase());
 	}

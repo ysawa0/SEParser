@@ -210,7 +210,7 @@ public class QParser {
 				}
 
 				sent.softCommand = true;
-				sent.softWords.add(new VerbNounPair(verb, ));
+				sent.softWords.add(new VerbNounPair(verb, ""));
 				return true;
 			} else {
 				return false;

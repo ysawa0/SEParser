@@ -22,11 +22,7 @@ public class VerbNounPair {
 		noun.add(n.toLowerCase());
 	}
 
-	public String nounToString() {
-		String str = "";
-		for (String s : noun) {
-			str += s + ' ';
-		}
-		return str;
+	public String toString() {
+		return verb + " - " + noun;
 	}
 }

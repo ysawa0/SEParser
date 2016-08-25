@@ -1,25 +1,19 @@
 package net.greenclay.SEParser;
-import net.greenclay.SEParser.Sentence;
 //import net.greenclay.SEParser.Sentence.*;
 
 //import java.util.Arrays;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
+        import java.util.ArrayList;
 import java.util.List;
 
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParserQuery;
-import edu.stanford.nlp.process.Tokenizer;
-import edu.stanford.nlp.trees.PennTreebankLanguagePack;
-import edu.stanford.nlp.trees.Tree;
-import edu.stanford.nlp.trees.TreebankLanguagePack;
-import edu.stanford.nlp.trees.tregex.TregexMatcher;
+        import edu.stanford.nlp.trees.Tree;
+        import edu.stanford.nlp.trees.tregex.TregexMatcher;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
-import edu.stanford.nlp.util.ScoredObject;
 
 // Takes sentences from the input and creates parse trees out of them
 public class QParser {
@@ -216,7 +210,7 @@ public class QParser {
 				}
 
 				sent.softCommand = true;
-				sent.softWords.add(new VerbNounPair(verb));
+				sent.softWords.add(new VerbNounPair(verb, ));
 				return true;
 			} else {
 				return false;

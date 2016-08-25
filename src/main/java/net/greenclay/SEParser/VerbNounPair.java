@@ -11,20 +11,20 @@ import java.util.ArrayList;
 public class VerbNounPair {
 	
 	public String verb;
-	public ArrayList<String> nouns;
+	public ArrayList<String> noun;
 	
-	public VerbNounPair(String v) {
-		verb = v.toLowerCase();
-		nouns = new ArrayList<String>();
+	public VerbNounPair(String verb, String noun) {
+		this.verb = verb.toLowerCase();
+		this.noun = new ArrayList<String>();
 	}
 	
 	public void addNoun(String n) {
-		nouns.add(n.toLowerCase());
+		noun.add(n.toLowerCase());
 	}
 
 	public String nounToString() {
 		String str = "";
-		for (String s : nouns) {
+		for (String s : noun) {
 			str += s + ' ';
 		}
 		return str;

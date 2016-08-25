@@ -93,7 +93,7 @@ public class Sentence {
 	
 	// Requires number of detections for a sentence to be detected
 	public void newPair(String v) {
-		vnpairs.add(new VerbNounPair(v));
+		vnpairs.add(new VerbNounPair(v, ));
 	}
 	
 	public void addNoun(String n) {

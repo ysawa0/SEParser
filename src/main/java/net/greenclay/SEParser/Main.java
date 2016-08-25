@@ -1,6 +1,5 @@
 package net.greenclay.SEParser;
 
-import javax.json.Json;
 import java.util.ArrayList;
 
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
@@ -13,7 +12,12 @@ public class Main {
 	// Main method 
 	// input - the input text file. Each sentence should be on its own line and end with a period
 	// lp - the Parser Model
+
 	public static void main(String[] args) {
+		TopicBlacklist.getTopicBlacklistFromMongo();
+	}
+
+	public static void mainx(String[] args) {
 		String dir = System.getProperty("user.dir");
 		if (dir.contains("/py-SEParser/SEParser")) {
 			topicBlacklistFileName = dir + "/topic_blacklist.txt";
@@ -81,14 +85,14 @@ public class Main {
 		TParser tp;
 		OutputWriter.write("\n---Question parse start--- " + numParses + " parses \n");
 		OutputWriter.write("Questions detected: " + qp.qList.size());
-		PairChecker pairCheck = new PairChecker(topicBlacklistFileName);
+		TopicBlacklist pairCheck = new TopicBlacklist(topicBlacklistFileName);
 
 		for(Sentence s :qp.detectedList) {
 			tp = new TParser(s);
 			tp.SQParse();
 			printSentences(s);
 			pairCheck.setSentence(s);
-			pairCheck.blacklistCheck2();
+			pairCheck.blacklistCheck();
 		}
 
 		int numMalicious = 0;
@@ -107,14 +111,14 @@ public class Main {
 
 		QParser qp = new QParser(filename,lp, numParses, 1, sentList);
 		OutputWriter.write("Soft commands detected: " + qp.softList.size());
-		PairChecker pairCheck = new PairChecker(topicBlacklistFileName);
+		TopicBlacklist pairCheck = new TopicBlacklist(topicBlacklistFileName);
 
 		for(Sentence s : qp.softList) {
 			TParser tp = new TParser(s);
 			tp.CommandParse();
 			printSentences(s);
 			pairCheck.setSentence(s);
-			pairCheck.blacklistCheck2();
+			pairCheck.blacklistCheck();
 
 		}
 		int numMalicious = 0;
@@ -133,7 +137,7 @@ public class Main {
 
 		QParser qp = new QParser(filename,lp, numParses,2, sentList);
 		OutputWriter.write("Direct commands detected: " + qp.hardList.size());
-		PairChecker pairCheck = new PairChecker(topicBlacklistFileName);
+		TopicBlacklist pairCheck = new TopicBlacklist(topicBlacklistFileName);
 
 		for(Sentence s : qp.hardList) {
 			TParser tp = new TParser(s);
@@ -141,7 +145,7 @@ public class Main {
 
 			printSentences(s);
 			pairCheck.setSentence(s);
-			pairCheck.blacklistCheck2();
+			pairCheck.blacklistCheck();
 		}
 
 		int numMalicious = 0;

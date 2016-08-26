@@ -27,8 +27,12 @@ public class Main {
 			dir = dir + "/SEParser/englishPCFG.ser.gz";
 		}
 		// System.out.println("dir:   " + dir);
-		topicBlacklistFileName = "topic_blacklist.txt";
-		lp = LexicalizedParser.loadModel("englishPCFG.ser.gz");
+
+        topicBlacklistFileName = "topic_blacklist.txt";
+
+        lp = LexicalizedParser.loadModel("englishPCFG.ser.gz");
+        TopicBlacklist.populateTopicBlacklist();
+
 		String input = args[0]; // Read sentence from args
 		int numParses = 3;
 		ArrayList<Sentence> sentList = ParseTreeMaker.makeOneParseTree(input, lp, numParses);
@@ -89,14 +93,12 @@ public class Main {
 		TParser tp;
 		OutputWriter.write("\n---Question parse start--- " + numParses + " parses \n");
 		OutputWriter.write("Questions detected: " + qp.qList.size());
-		TopicBlacklist pairCheck = new TopicBlacklist(topicBlacklistFileName);
 
 		for(Sentence s :qp.detectedList) {
 			tp = new TParser(s);
 			tp.SQParse();
 			printSentences(s);
-			pairCheck.setSentence(s);
-			pairCheck.blacklistCheck();
+            TopicBlacklist.blacklistCheck(s);
 		}
 
 		int numMalicious = 0;
@@ -115,14 +117,12 @@ public class Main {
 
 		QParser qp = new QParser(filename,lp, numParses, 1, sentList);
 		OutputWriter.write("Soft commands detected: " + qp.softList.size());
-		TopicBlacklist pairCheck = new TopicBlacklist(topicBlacklistFileName);
 
 		for(Sentence s : qp.softList) {
 			TParser tp = new TParser(s);
 			tp.CommandParse();
 			printSentences(s);
-			pairCheck.setSentence(s);
-			pairCheck.blacklistCheck();
+            TopicBlacklist.blacklistCheck(s);
 
 		}
 		int numMalicious = 0;
@@ -141,15 +141,13 @@ public class Main {
 
 		QParser qp = new QParser(filename,lp, numParses,2, sentList);
 		OutputWriter.write("Direct commands detected: " + qp.hardList.size());
-		TopicBlacklist pairCheck = new TopicBlacklist(topicBlacklistFileName);
 
 		for(Sentence s : qp.hardList) {
 			TParser tp = new TParser(s);
 			tp.CommandParse();
 
 			printSentences(s);
-			pairCheck.setSentence(s);
-			pairCheck.blacklistCheck();
+            TopicBlacklist.blacklistCheck(s);
 		}
 
 		int numMalicious = 0;

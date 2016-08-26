@@ -17,11 +17,11 @@ import org.bson.Document;
 
 // TODO: Change txt file format to json. Allow multi word nouns like "Internet Explorer"
 // This class will check VerbNounPairs against the Topic blacklist stored on MongoDB
-public class TopicBlacklist {
+public final class TopicBlacklist {
 
-	private Sentence sent;
-	private ArrayList<VerbNounPair> blacklist;
-	public TopicBlacklist(String myFileName) {
+//	private Sentence sent;
+	private static ArrayList<VerbNounPair> blacklist;
+	private TopicBlacklist(String myFileName) {
 		blacklist = new ArrayList<VerbNounPair>();
         blacklist.addAll(getTopicBlacklistFromMongo());
         // Populate topic blacklist by reading myFileName
@@ -55,6 +55,11 @@ public class TopicBlacklist {
 		// blacklist.get(blacklist.size()-1).addNoun("firewall");
 	}
 
+	public static void populateTopicBlacklist() {
+        blacklist = new ArrayList<VerbNounPair>();
+        blacklist.addAll(getTopicBlacklistFromMongo());
+    }
+
 	public static ArrayList<VerbNounPair> getTopicBlacklistFromMongo() {
 //		String mURI = "mongodb://guest:anteater1@ds145325.mlab.com:45325/separser";
 //		MongoClientURI uri = new MongoClientURI(mURI);
@@ -85,9 +90,9 @@ public class TopicBlacklist {
 //		}
 	}
 
-	public void setSentence(Sentence s) {
-		this.sent = s;
-	}
+//	public void setSentence(Sentence s) {
+//		this.sent = s;
+//	}
 
 	// Method deprecated for now. Dont need Anaphora detection
 	// Detect "that" or "it" and when found, replace them with the previous noun
@@ -111,7 +116,7 @@ public class TopicBlacklist {
 //		}
 //	}
 
-	public void blacklistCheck() {
+	public static void blacklistCheck(Sentence sent) {
 //		doAnaphoraDetection();
 		for (VerbNounPair sentencePair : sent.vnpairs) {
 			for (VerbNounPair blacklistPair : blacklist )
@@ -143,7 +148,7 @@ public class TopicBlacklist {
 	// Verb Noun Noun Noun ...
 	// ie: give social address password 
 	// Verb and nouns should be all lowercased
-	private ArrayList<VerbNounPair> readTopicBlacklistFile(String myFileName) {
+	private static ArrayList<VerbNounPair> readTopicBlacklistFile(String myFileName) {
 		ArrayList<VerbNounPair> blacklist = new ArrayList<VerbNounPair>();
 		try (BufferedReader br = new BufferedReader(new FileReader(myFileName))) {
 			String line = br.readLine();

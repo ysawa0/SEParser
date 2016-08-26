@@ -73,7 +73,7 @@ public final class TopicBlacklist {
 		for (Document d : iterable) {
 			VerbNounPair pair = new VerbNounPair(d.get("verb").toString(), d.get("noun").toString());
             myblacklist.add(pair);
-			System.out.println(pair.toString());
+//			System.out.println(pair.toString());
 		}
 
 		return myblacklist;

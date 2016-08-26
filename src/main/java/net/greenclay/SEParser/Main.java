@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Main {
 	private static ArrayList<String> overallResults = new ArrayList<String>();
-	private static String topicBlacklistFileName; 
+	private static String topicBlacklistFileName;
 	private static LexicalizedParser lp;
-	
-	// Main method 
+
+	// Main method
 	// input - the input text file. Each sentence should be on its own line and end with a period
 	// lp - the Parser Model
 
@@ -18,6 +21,10 @@ public class Main {
 //	}
 
 	public static void main(String[] args) {
+	    // Turn off MongoDB Driver's logging since it is annoying
+        Logger mongoLogger = Logger.getLogger( "org.mongodb" );
+        mongoLogger.setLevel(Level.SEVERE); // e.g. or Log.WARNING, etc.
+
 		String dir = System.getProperty("user.dir");
 		if (dir.contains("/py-SEParser/SEParser")) {
 			topicBlacklistFileName = dir + "/topic_blacklist.txt";

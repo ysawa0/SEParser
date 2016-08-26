@@ -40,6 +40,10 @@ public class Main {
 		OutputWriter.printAll();
 	}
 
+	public static void getTopicBlacklist() {
+
+    }
+
 	public static void getJSONResult(String sentence, int numParses, ArrayList<Sentence> sentList) {
 		questionParse(sentence, numParses, sentList).get(0);
 		softCommandParse(sentence, numParses, sentList).get(0);

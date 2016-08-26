@@ -23,8 +23,6 @@ public class TopicBlacklist {
 	private ArrayList<VerbNounPair> blacklist;
 	public TopicBlacklist(String myFileName) {
 		blacklist = new ArrayList<VerbNounPair>();
-
-
         blacklist.addAll(getTopicBlacklistFromMongo());
         // Populate topic blacklist by reading myFileName
         // OLD BLACKLIST THAT READS FROM TEXT FILE BELOW

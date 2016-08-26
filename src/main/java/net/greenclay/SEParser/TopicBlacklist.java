@@ -128,6 +128,7 @@ public final class TopicBlacklist {
                         OutputWriter.write("Noun found on Topic Blacklist: " + blacklistPair.noun);
 						OutputWriter.write("---- Sentence is MALICIOUS ------");
 						sent.setIsMalicious(true);
+                        sentencePair.malicious = true;
 					}
 //					for (String noun : sentPair.nouns) {
 //						for (String blacknoun : blackwordsPair.nouns) {

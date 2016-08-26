@@ -13,6 +13,7 @@ public class VerbNounPair {
 	public String verb;
 //	public ArrayList<String> noun;
 	public String noun;
+    protected boolean malicious = false;
 
 	public VerbNounPair(String verb, String noun) {
 		this.verb = verb.toLowerCase();

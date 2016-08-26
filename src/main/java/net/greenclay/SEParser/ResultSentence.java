@@ -39,7 +39,7 @@ public class ResultSentence {
 	private String toString(ArrayList<VerbNounPair> vnpairs) {
 		String result = "";
 		for (VerbNounPair pair : vnpairs) {
-			result += pair.toString() + ", ";
+			if (pair.malicious) result += pair.toString() + ", ";
 		}
 		return result;
 

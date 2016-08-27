@@ -36,11 +36,11 @@ public class Main {
 		// System.out.println("dir:   " + dir);
 
         topicBlacklistFileName = "topic_blacklist.txt";
-
-        lp = LexicalizedParser.loadModel("englishPCFG.ser.gz");
+		String englishPCFG = args[0];
+        lp = LexicalizedParser.loadModel(englishPCFG);
         TopicBlacklist.populateTopicBlacklist();
 
-		String input = args[0]; // Read sentence from args
+		String input = args[1]; // Read sentence from args
 		int numParses = 3;
 		ArrayList<Sentence> sentList = ParseTreeMaker.makeOneParseTree(input, lp, numParses);
 		OutputWriter.write(sentList.get(0).getkBestTrees().get(0));

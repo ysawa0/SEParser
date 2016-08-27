@@ -24,7 +24,7 @@ hs_err_pid*
 # git has its own built in compression methods
 *.7z
 *.dmg
-*.gz
+#*.gz
 *.iso
 
 *.rar
@@ -92,7 +92,7 @@ Temporary Items
 .apdisk
 
 
-englishPCFG.ser.gz
+#englishPCFG.ser.gz
 stanford-parser.jar
 data/*
 .idea
